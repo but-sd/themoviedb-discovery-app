@@ -5,6 +5,21 @@ import express from 'express'
 const app = express()
 const port = process.env.PORT || 3001
 
+function getSingleQueryParam(value: unknown, fallback: string): string {
+  if (typeof value === 'string' && value.length > 0) {
+    return value
+  }
+
+  if (Array.isArray(value)) {
+    const firstString = value.find((item): item is string => typeof item === 'string')
+    if (firstString && firstString.length > 0) {
+      return firstString
+    }
+  }
+
+  return fallback
+}
+
 app.use(cors())
 app.use(express.json())
 
@@ -20,9 +35,9 @@ app.get('/api/movies/popular', async (req, res) => {
     return
   }
 
-  const language = String(req.query.language || 'fr-FR')
-  const region = String(req.query.region || 'FR')
-  const page = String(req.query.page || '1')
+  const language = getSingleQueryParam(req.query.language, 'fr-FR')
+  const region = getSingleQueryParam(req.query.region, 'FR')
+  const page = getSingleQueryParam(req.query.page, '1')
 
   const tmdbUrl =
     `https://api.themoviedb.org/3/movie/popular?` +

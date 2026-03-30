@@ -12,7 +12,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:client": "vite",
-    "dev:server": "tsx watch server/index.ts"
+    "dev:server": "tsx watch server/index.ts",
+    "build:client": "tsc -b && vite build",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:prod": "npm run build:client && npm run build:server",
+    "start:server": "node dist-server/index.js"
   },
   "dependencies": {
     "cors": "^2.8.6",
