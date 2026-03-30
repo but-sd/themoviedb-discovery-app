@@ -6,6 +6,14 @@ export type Movie = {
   poster_path?: string
 }
 
+export type TvShow = {
+  id: number
+  name: string
+  first_air_date?: string
+  vote_average: number
+  poster_path?: string
+}
+
 export type MovieGenre = {
   id: number
   name: string
@@ -24,15 +32,21 @@ type PopularMoviesResponse = {
   results?: Movie[]
 }
 
+type PopularTvShowsResponse = {
+  results?: TvShow[]
+}
+
+type MediaListParams = {
+  language?: string
+  region?: string
+  page?: number
+}
+
 type MovieRequestParams = {
   language?: string
 }
 
-export async function fetchPopularMovies(params?: {
-  language?: string
-  region?: string
-  page?: number
-}): Promise<Movie[]> {
+export async function fetchPopularMovies(params?: MediaListParams): Promise<Movie[]> {
   const searchParams = new URLSearchParams({
     language: params?.language ?? 'fr-FR',
     region: params?.region ?? 'FR',
@@ -47,6 +61,24 @@ export async function fetchPopularMovies(params?: {
   }
 
   const data = (await response.json()) as PopularMoviesResponse
+  return data.results ?? []
+}
+
+export async function fetchPopularTvShows(params?: MediaListParams): Promise<TvShow[]> {
+  const searchParams = new URLSearchParams({
+    language: params?.language ?? 'fr-FR',
+    region: params?.region ?? 'FR',
+    page: String(params?.page ?? 1),
+  })
+
+  const response = await fetch(`/api/tv/popular?${searchParams.toString()}`)
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || `Request failed with status ${response.status}`)
+  }
+
+  const data = (await response.json()) as PopularTvShowsResponse
   return data.results ?? []
 }
 
