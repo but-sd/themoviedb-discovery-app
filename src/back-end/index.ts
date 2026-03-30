@@ -81,10 +81,12 @@ app.get('/api/movies/:id', async (req, res) => {
   }
 
   const movieId = req.params.id
+  const language = getSingleQueryParam(req.query.language, 'fr-FR')
 
   const tmdbUrl =
     `https://api.themoviedb.org/3/movie/${encodeURIComponent(movieId)}?` +
-    `api_key=${encodeURIComponent(apiKey)}`
+    `api_key=${encodeURIComponent(apiKey)}` +
+    `&language=${encodeURIComponent(language)}`
 
   try {
     const tmdbResponse = await fetch(tmdbUrl)

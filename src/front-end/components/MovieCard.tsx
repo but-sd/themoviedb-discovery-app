@@ -5,13 +5,14 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w342'
 
 type MovieCardProps = Readonly<{
   movie: Movie
+  href?: string
 }>
 
-export default function MovieCard({ movie }: MovieCardProps) {
+export default function MovieCard({ movie, href }: MovieCardProps) {
   const releaseYear = movie.release_date?.slice(0, 4) ?? 'N/A'
   const posterSrc = movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : null
 
-  return (
+  const content = (
     <article className="movie-card">
       {posterSrc ? (
         <img src={posterSrc} alt={`Poster for ${movie.title}`} className="movie-poster" />
@@ -24,5 +25,15 @@ export default function MovieCard({ movie }: MovieCardProps) {
         <p className="movie-meta">{releaseYear} · Rating {movie.vote_average.toFixed(1)}</p>
       </div>
     </article>
+  )
+
+  if (!href) {
+    return content
+  }
+
+  return (
+    <a className="movie-card-link" href={href} aria-label={`Open details for ${movie.title}`}>
+      {content}
+    </a>
   )
 }

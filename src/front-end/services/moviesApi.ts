@@ -6,8 +6,26 @@ export type Movie = {
   poster_path?: string
 }
 
+export type MovieGenre = {
+  id: number
+  name: string
+}
+
+export type MovieDetails = Movie & {
+  backdrop_path?: string
+  overview?: string
+  runtime?: number
+  genres?: MovieGenre[]
+  tagline?: string
+  original_title?: string
+}
+
 type PopularMoviesResponse = {
   results?: Movie[]
+}
+
+type MovieRequestParams = {
+  language?: string
 }
 
 export async function fetchPopularMovies(params?: {
@@ -30,4 +48,23 @@ export async function fetchPopularMovies(params?: {
 
   const data = (await response.json()) as PopularMoviesResponse
   return data.results ?? []
+}
+
+export async function fetchMovieDetails(
+  movieId: number | string,
+  params?: MovieRequestParams,
+): Promise<MovieDetails> {
+  const searchParams = new URLSearchParams({
+    language: params?.language ?? 'fr-FR',
+  })
+  const response = await fetch(
+    `/api/movies/${encodeURIComponent(String(movieId))}?${searchParams.toString()}`,
+  )
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || `Request failed with status ${response.status}`)
+  }
+
+  return (await response.json()) as MovieDetails
 }
