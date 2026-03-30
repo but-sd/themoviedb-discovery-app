@@ -50,6 +50,9 @@
   margin: 0 0 6px;
   font: 650 20px/1.2 'Avenir Next', 'Trebuchet MS', sans-serif;
   color: var(--ink-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .movie-meta {
