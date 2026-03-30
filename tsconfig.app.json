@@ -30,6 +30,6 @@
     "src"
   ],
   "exclude": [
-    "src/server"
+    "src/back-end"
   ]
 }
