@@ -1,11 +1,54 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
+import { fetchPopularMovies, type Movie } from './services/moviesApi'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [popularMovies, setPopularMovies] = useState<Movie[]>([])
+  const [isLoadingMovies, setIsLoadingMovies] = useState(false)
+  const [moviesError, setMoviesError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    const loadMovies = async () => {
+      setIsLoadingMovies(true)
+      setMoviesError(null)
+
+      try {
+        const movies = await fetchPopularMovies({
+          language: 'fr-FR',
+          region: 'FR',
+          page: 1,
+        })
+
+        if (!controller.signal.aborted) {
+          setPopularMovies(movies.slice(0, 8))
+        }
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return
+        }
+
+        const message =
+          error instanceof Error ? error.message : 'Failed to fetch popular movies'
+        setMoviesError(message)
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingMovies(false)
+        }
+      }
+    }
+
+    loadMovies()
+
+    return () => {
+      controller.abort()
+    }
+  }, [])
 
   return (
     <>
@@ -16,14 +59,29 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+          <h1>Movie Discovery</h1>
+          <p>Popular movies are loaded via your backend service API.</p>
+
+          {isLoadingMovies && <p>Loading popular movies...</p>}
+          {moviesError && <p>Could not load movies: {moviesError}</p>}
+
+          {!isLoadingMovies && !moviesError && popularMovies.length > 0 && (
+            <>
+              <h2>Popular Movies (France)</h2>
+              <ul>
+                {popularMovies.map((movie) => (
+                  <li key={movie.id}>
+                    {movie.title} ({movie.release_date?.slice(0, 4) ?? 'N/A'}) -{' '}
+                    {movie.vote_average.toFixed(1)}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
         <button
           className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={() => setCount((currentCount) => currentCount + 1)}
         >
           Count is {count}
         </button>
