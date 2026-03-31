@@ -28,6 +28,15 @@ export type MovieDetails = Movie & {
   original_title?: string
 }
 
+export type TvDetails = TvShow & {
+  backdrop_path?: string
+  overview?: string
+  episode_run_time?: number[]
+  genres?: MovieGenre[]
+  tagline?: string
+  original_name?: string
+}
+
 type PopularMoviesResponse = {
   results?: Movie[]
 }
@@ -42,7 +51,7 @@ type MediaListParams = {
   page?: number
 }
 
-type MovieRequestParams = {
+type MediaRequestParams = {
   language?: string
 }
 
@@ -84,7 +93,7 @@ export async function fetchPopularTvShows(params?: MediaListParams): Promise<TvS
 
 export async function fetchMovieDetails(
   movieId: number | string,
-  params?: MovieRequestParams,
+  params?: MediaRequestParams,
 ): Promise<MovieDetails> {
   const searchParams = new URLSearchParams({
     language: params?.language ?? 'fr-FR',
@@ -99,4 +108,23 @@ export async function fetchMovieDetails(
   }
 
   return (await response.json()) as MovieDetails
+}
+
+export async function fetchTvDetails(
+  tvId: number | string,
+  params?: MediaRequestParams,
+): Promise<TvDetails> {
+  const searchParams = new URLSearchParams({
+    language: params?.language ?? "fr-FR",
+  })
+  const response = await fetch(
+    `/api/tv/${encodeURIComponent(String(tvId))}?${searchParams.toString()}`,
+  )
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || `Request failed with status ${response.status}`)
+  }
+
+  return (await response.json()) as TvDetails
 }

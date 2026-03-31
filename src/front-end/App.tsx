@@ -1,5 +1,6 @@
 import MovieDetailPage from './pages/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage'
+import TvDetailPage from './pages/TvDetailPage'
 import TvListPage from './pages/TvListPage'
 
 function normalizePathname(pathname: string): string {
@@ -10,16 +11,21 @@ function normalizePathname(pathname: string): string {
 export default function App() {
   const pathname = normalizePathname(globalThis.location.pathname)
   const movieDetailMatch = /^\/movies\/(\d+)$/.exec(pathname)
+  const tvDetailMatch = /^\/tv\/(\d+)$/.exec(pathname)
 
   if (movieDetailMatch) {
     return <MovieDetailPage movieId={movieDetailMatch[1]} />
   }
 
-  if (pathname == '/' || pathname == '/movies') {
+  if (tvDetailMatch) {
+    return <TvDetailPage tvId={tvDetailMatch[1]} />
+  }
+
+  if (pathname === '/' || pathname === '/movies') {
     return <MovieListPage />
   }
 
-  if (pathname == '/tv') {
+  if (pathname === '/tv') {
     return <TvListPage />
   }
 

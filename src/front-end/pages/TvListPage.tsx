@@ -76,7 +76,11 @@ export default function TvListPage() {
       ) : (
         <section className="movie-grid" aria-live="polite">
           {shows.map((show) => (
-            <MovieCard key={`${show.id}-${show.first_air_date ?? 'unknown'}`} movie={toMovieCardModel(show)} />
+            <MovieCard
+              key={`${show.id}-${show.first_air_date ?? 'unknown'}`}
+              movie={toMovieCardModel(show)}
+              href={`/tv/${show.id}`}
+            />
           ))}
         </section>
       )}
