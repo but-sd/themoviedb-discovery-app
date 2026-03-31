@@ -1,12 +1,5 @@
 import type { Page, Route } from '@playwright/test'
-
-type Movie = {
-  id: number
-  title: string
-  release_date?: string
-  vote_average: number
-  poster_path?: string
-}
+import { Movie, movieDetailsAvatar, moviesPageOne, moviesPageTwo } from './mock-data'
 
 type TvShow = {
   id: number
@@ -15,33 +8,6 @@ type TvShow = {
   vote_average: number
   poster_path?: string
 }
-
-const moviesPageOne: Movie[] = [
-  {
-    id: 101,
-    title: 'Paris Under Neon',
-    release_date: '2024-04-12',
-    vote_average: 7.4,
-    poster_path: '/paris-under-neon.jpg',
-  },
-  {
-    id: 102,
-    title: 'Midnight on the Seine',
-    release_date: '2023-09-01',
-    vote_average: 6.9,
-    poster_path: '/midnight-on-the-seine.jpg',
-  },
-]
-
-const moviesPageTwo: Movie[] = [
-  {
-    id: 103,
-    title: 'Marseille Skies',
-    release_date: '2022-02-17',
-    vote_average: 8.1,
-    poster_path: '/marseille-skies.jpg',
-  },
-]
 
 const tvPageOne: TvShow[] = [
   {
@@ -59,23 +25,6 @@ const tvPageOne: TvShow[] = [
     poster_path: '/signal-paris.jpg',
   },
 ]
-
-export const movieDetails = {
-  id: 101,
-  title: 'Paris Under Neon',
-  original_title: 'Paris sous neon',
-  release_date: '2024-04-12',
-  vote_average: 7.4,
-  poster_path: '/paris-under-neon.jpg',
-  backdrop_path: '/paris-under-neon-backdrop.jpg',
-  runtime: 127,
-  tagline: 'Every street hides a secret.',
-  overview: 'A night-shift courier stumbles into a city-wide conspiracy.',
-  genres: [
-    { id: 18, name: 'Drama' },
-    { id: 53, name: 'Thriller' },
-  ],
-}
 
 export const tvDetails = {
   id: 201,
@@ -102,7 +51,7 @@ async function fulfillJson(route: Route, body: unknown) {
   })
 }
 
-export async function mockMovieDetailsApi(page: Page, details = movieDetails) {
+export async function mockMovieDetailsApi(page: Page, details = movieDetailsAvatar) {
   await page.route('**/api/movies/101?**', async (route) => {
     await fulfillJson(route, details)
   })
