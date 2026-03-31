@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import Nav from '../components/Nav'
 import { fetchTvDetails, type TvDetails } from '../services/moviesApi'
 import './MovieDetailPage.css'
 
@@ -60,64 +59,60 @@ export default function TvDetailPage() {
   const releaseYear = show?.first_air_date?.slice(0, 4) ?? 'N/A'
 
   return (
-    <main className="movie-detail-page">
-      <div className="movie-detail-shell">
-        <Nav />
+    <>
+      <Link className="back-link" to="/tv">
+        ← Back to popular TV shows
+      </Link>
 
-        <Link className="back-link" to="/tv">
-          ← Back to popular TV shows
-        </Link>
+      {isLoading ? <p className="detail-status">Loading TV show details...</p> : null}
 
-        {isLoading ? <p className="detail-status">Loading TV show details...</p> : null}
+      {error ? <p className="detail-status detail-error">{error}</p> : null}
 
-        {error ? <p className="detail-status detail-error">{error}</p> : null}
+      {show ? (
+        <article className="movie-detail-card">
+          {heroImage ? (
+            <img
+              className="movie-detail-hero"
+              src={`${IMAGE_BASE_URL}${heroImage}`}
+              alt={`Artwork for ${show.name}`}
+            />
+          ) : (
+            <div className="movie-detail-hero movie-detail-hero-placeholder" aria-hidden="true" />
+          )}
 
-        {show ? (
-          <article className="movie-detail-card">
-            {heroImage ? (
-              <img
-                className="movie-detail-hero"
-                src={`${IMAGE_BASE_URL}${heroImage}`}
-                alt={`Artwork for ${show.name}`}
-              />
-            ) : (
-              <div className="movie-detail-hero movie-detail-hero-placeholder" aria-hidden="true" />
-            )}
+          <div className="movie-detail-copy">
+            <p className="movie-detail-kicker">TV detail</p>
+            <h1>{show.name}</h1>
+            {show.tagline ? <p className="movie-detail-tagline">{show.tagline}</p> : null}
 
-            <div className="movie-detail-copy">
-              <p className="movie-detail-kicker">TV detail</p>
-              <h1>{show.name}</h1>
-              {show.tagline ? <p className="movie-detail-tagline">{show.tagline}</p> : null}
-
-              <div className="movie-detail-meta">
-                <span>{releaseYear}</span>
-                <span>{formatEpisodeRuntime(show.episode_run_time)}</span>
-                <span>Rating {show.vote_average.toFixed(1)}</span>
-              </div>
-
-              {show.genres && show.genres.length > 0 ? (
-                <ul className="movie-detail-genres">
-                  {show.genres.map((genre) => (
-                    <li key={genre.id}>{genre.name}</li>
-                  ))}
-                </ul>
-              ) : null}
-
-              <section className="movie-detail-section">
-                <h2>Overview</h2>
-                <p>{show.overview || 'No synopsis is available for this show yet.'}</p>
-              </section>
-
-              {show.original_name && show.original_name !== show.name ? (
-                <section className="movie-detail-section">
-                  <h2>Original name</h2>
-                  <p>{show.original_name}</p>
-                </section>
-              ) : null}
+            <div className="movie-detail-meta">
+              <span>{releaseYear}</span>
+              <span>{formatEpisodeRuntime(show.episode_run_time)}</span>
+              <span>Rating {show.vote_average.toFixed(1)}</span>
             </div>
-          </article>
-        ) : null}
-      </div>
-    </main>
+
+            {show.genres && show.genres.length > 0 ? (
+              <ul className="movie-detail-genres">
+                {show.genres.map((genre) => (
+                  <li key={genre.id}>{genre.name}</li>
+                ))}
+              </ul>
+            ) : null}
+
+            <section className="movie-detail-section">
+              <h2>Overview</h2>
+              <p>{show.overview || 'No synopsis is available for this show yet.'}</p>
+            </section>
+
+            {show.original_name && show.original_name !== show.name ? (
+              <section className="movie-detail-section">
+                <h2>Original name</h2>
+                <p>{show.original_name}</p>
+              </section>
+            ) : null}
+          </div>
+        </article>
+      ) : null}
+    </>
   )
 }
