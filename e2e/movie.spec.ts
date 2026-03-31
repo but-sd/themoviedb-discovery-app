@@ -1,46 +1,25 @@
-import { expect, test, type Page, type Route } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
-const movieDetails = {
-  id: 101,
-  title: 'Paris Under Neon',
-  original_title: 'Paris sous neon',
-  release_date: '2024-04-12',
-  vote_average: 7.4,
-  poster_path: '/paris-under-neon.jpg',
-  backdrop_path: '/paris-under-neon-backdrop.jpg',
-  runtime: 127,
-  tagline: 'Every street hides a secret.',
-  overview: 'A night-shift courier stumbles into a city-wide conspiracy.',
-  genres: [
-    { id: 18, name: 'Drama' },
-    { id: 53, name: 'Thriller' },
-  ],
-}
+import { mockMovieDetailsApi, movieDetails } from './mock-api'
 
-async function fulfillJson(route: Route, body: unknown) {
-  await route.fulfill({
-    status: 200,
-    contentType: 'application/json',
-    body: JSON.stringify(body),
-  })
-}
-
-async function mockApi(page: Page) {
-  await page.route('**/api/movies/101?**', async (route) => {
-    await fulfillJson(route, movieDetails)
-  })
-}
-
+// This test verifies that the details page correctly displays the information of a movie when accessed directly via its URL. It mocks the API response for the movie details and checks that the relevant information is visible on the page.
 test.beforeEach(async ({ page }) => {
-  await mockApi(page)
+  await mockMovieDetailsApi(page)
 })
 
+// Test case: Show the details of a movie using the details page URL
 test('show the details of a movie using the details page URL', async ({ page }) => {
-  await page.goto('/movies/101')
+  // Navigate directly to the movie details page using the movie's ID
+  await page.goto(`/movies/${movieDetails.id}`)
 
-  await expect(page).toHaveURL(/\/movies\/101$/)
-  await expect(page.getByRole('heading', { name: 'Paris Under Neon' })).toBeVisible()
-  await expect(page.getByText('Paris sous neon')).toBeVisible()
-  await expect(page.getByText('A night-shift courier stumbles into a city-wide conspiracy.')).toBeVisible()
-  await expect(page.getByText('Every street hides a secret.')).toBeVisible()
+  // Assert that the URL is correct
+  await expect(page).toHaveURL(new RegExp(`/movies/${movieDetails.id}$`))
+
+  // Assert that title is an h1 heading and is visible
+  await expect(page.getByRole('heading', { name: movieDetails.title })).toBeVisible()
+
+  // Assert that the original title, overview, and tagline are visible on the page
+  await expect(page.getByText(movieDetails.original_title)).toBeVisible()
+  await expect(page.getByText(movieDetails.overview)).toBeVisible()
+  await expect(page.getByText(movieDetails.tagline)).toBeVisible()
 })
