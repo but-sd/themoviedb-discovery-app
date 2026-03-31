@@ -1,3 +1,4 @@
+import Nav from './components/Nav'
 import MovieDetailPage from './pages/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage'
 import TvDetailPage from './pages/TvDetailPage'
@@ -31,6 +32,8 @@ export default function App() {
 
   return (
     <main className="movie-page">
+      <Nav />
+
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Page Not Found</h1>

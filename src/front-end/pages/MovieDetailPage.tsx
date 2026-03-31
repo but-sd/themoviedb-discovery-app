@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Nav from '../components/Nav'
 import { fetchMovieDetails, type MovieDetails } from '../services/moviesApi'
 import './MovieDetailPage.css'
 
@@ -54,6 +55,8 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
   return (
     <main className="movie-detail-page">
       <div className="movie-detail-shell">
+        <Nav currentSection="movies" />
+
         <a className="back-link" href="/">
           ← Back to popular movies
         </a>

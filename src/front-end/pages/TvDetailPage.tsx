@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Nav from '../components/Nav'
 import { fetchTvDetails, type TvDetails } from '../services/moviesApi'
 import './MovieDetailPage.css'
 
@@ -56,6 +57,8 @@ export default function TvDetailPage({ tvId }: TvDetailPageProps) {
   return (
     <main className="movie-detail-page">
       <div className="movie-detail-shell">
+        <Nav currentSection="tv" />
+
         <a className="back-link" href="/tv">
           ← Back to popular TV shows
         </a>

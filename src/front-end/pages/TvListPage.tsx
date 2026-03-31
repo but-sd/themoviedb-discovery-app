@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Nav from '../components/Nav'
 import MovieCard from '../components/MovieCard'
 import { fetchPopularTvShows, type Movie, type TvShow } from '../services/moviesApi'
 import './MovieListPage.css'
@@ -63,6 +64,8 @@ export default function TvListPage() {
 
   return (
     <main className="movie-page">
+      <Nav currentSection="tv" />
+
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Popular TV Shows</h1>
