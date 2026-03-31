@@ -26,7 +26,7 @@ export default function MovieListPage() {
       }
     }
 
-    loadInitialPage()
+    void loadInitialPage()
   }, [])
 
   const handleLoadMore = async () => {
@@ -52,7 +52,7 @@ export default function MovieListPage() {
   }
 
   return (
-    <main className="movie-page">
+    <>
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Popular Movies</h1>
@@ -80,6 +80,6 @@ export default function MovieListPage() {
           {isLoading ? 'Loading...' : 'Load More'}
         </button>
       </div>
-    </main>
+    </>
   )
 }

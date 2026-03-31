@@ -57,7 +57,8 @@
   justify-content: center;
 }
 
-.actions button {
+.actions button,
+.actions a {
   border: none;
   border-radius: 999px;
   padding: 12px 22px;
@@ -67,9 +68,12 @@
   background: var(--accent);
   cursor: pointer;
   transition: background-color 160ms ease;
+  text-decoration: none;
 }
 
-.actions button:hover:not(:disabled) {
+.actions button:hover:not(:disabled),
+.actions a:hover,
+.actions a:focus-visible {
   background: var(--accent-hover);
 }
 

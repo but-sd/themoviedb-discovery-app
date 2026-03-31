@@ -62,7 +62,7 @@ export default function TvListPage() {
   }
 
   return (
-    <main className="movie-page">
+    <>
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Popular TV Shows</h1>
@@ -90,6 +90,6 @@ export default function TvListPage() {
           {isLoading ? 'Loading...' : 'Load More'}
         </button>
       </div>
-    </main>
+    </>
   )
 }
