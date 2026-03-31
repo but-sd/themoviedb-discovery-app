@@ -27,7 +27,7 @@ export default function MovieListPage() {
       }
     }
 
-    loadInitialPage()
+    void loadInitialPage()
   }, [])
 
   const handleLoadMore = async () => {
@@ -54,7 +54,7 @@ export default function MovieListPage() {
 
   return (
     <main className="movie-page">
-      <Nav currentSection="movies" />
+      <Nav />
 
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>

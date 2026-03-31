@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import Nav from '../components/Nav'
 import { fetchMovieDetails, type MovieDetails } from '../services/moviesApi'
 import './MovieDetailPage.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'
-
-type MovieDetailPageProps = Readonly<{
-  movieId: string
-}>
 
 function formatRuntime(runtime?: number): string {
   if (!runtime) {
@@ -24,12 +21,20 @@ function formatRuntime(runtime?: number): string {
   return `${hours}h ${String(minutes).padStart(2, '0')}m`
 }
 
-export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
+export default function MovieDetailPage() {
+  const { movieId } = useParams<{ movieId: string }>()
   const [movie, setMovie] = useState<MovieDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!movieId) {
+      setMovie(null)
+      setError('Movie ID is missing.')
+      setIsLoading(false)
+      return
+    }
+
     const loadMovie = async () => {
       setIsLoading(true)
       setError(null)
@@ -55,11 +60,11 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
   return (
     <main className="movie-detail-page">
       <div className="movie-detail-shell">
-        <Nav currentSection="movies" />
+        <Nav />
 
-        <a className="back-link" href="/">
+        <Link className="back-link" to="/movies">
           ← Back to popular movies
-        </a>
+        </Link>
 
         {isLoading ? (
           <p className="detail-status">Loading movie details...</p>

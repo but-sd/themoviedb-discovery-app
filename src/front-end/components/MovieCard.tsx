@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { type Movie } from '../services/moviesApi'
 import './MovieCard.css'
 
@@ -32,8 +33,8 @@ export default function MovieCard({ movie, href }: MovieCardProps) {
   }
 
   return (
-    <a className="movie-card-link" href={href} aria-label={`Open details for ${movie.title}`}>
+    <Link className="movie-card-link" to={href} aria-label={`Open details for ${movie.title}`}>
       {content}
-    </a>
+    </Link>
   )
 }

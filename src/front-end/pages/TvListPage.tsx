@@ -64,7 +64,7 @@ export default function TvListPage() {
 
   return (
     <main className="movie-page">
-      <Nav currentSection="tv" />
+      <Nav />
 
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>

@@ -1,13 +1,10 @@
+import { Link, NavLink } from 'react-router-dom'
 import './Nav.css'
 
-type NavProps = Readonly<{
-  currentSection?: 'movies' | 'tv'
-}>
-
-export default function Nav({ currentSection }: NavProps) {
+export default function Nav() {
   return (
     <nav className="app-nav" aria-label="Primary">
-      <a className="app-nav-brand" href="/">
+      <Link className="app-nav-brand" to="/movies">
         <span className="app-nav-brand-mark" aria-hidden="true">
           TMDB
         </span>
@@ -15,23 +12,21 @@ export default function Nav({ currentSection }: NavProps) {
           <strong>The Movie DB Discovery</strong>
           <span>Browse trending picks in France</span>
         </span>
-      </a>
+      </Link>
 
       <div className="app-nav-links">
-        <a
-          className={`app-nav-link ${currentSection === 'movies' ? 'is-active' : ''}`}
-          href="/movies"
-          aria-current={currentSection === 'movies' ? 'page' : undefined}
+        <NavLink
+          className={({ isActive }) => `app-nav-link${isActive ? ' is-active' : ''}`}
+          to="/movies"
         >
           Movies
-        </a>
-        <a
-          className={`app-nav-link ${currentSection === 'tv' ? 'is-active' : ''}`}
-          href="/tv"
-          aria-current={currentSection === 'tv' ? 'page' : undefined}
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => `app-nav-link${isActive ? ' is-active' : ''}`}
+          to="/tv"
         >
           TV Shows
-        </a>
+        </NavLink>
       </div>
     </nav>
   )

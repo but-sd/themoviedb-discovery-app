@@ -1,35 +1,11 @@
+import { Link, Navigate, Route, Routes } from 'react-router-dom'
 import Nav from './components/Nav'
 import MovieDetailPage from './pages/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage'
 import TvDetailPage from './pages/TvDetailPage'
 import TvListPage from './pages/TvListPage'
 
-function normalizePathname(pathname: string): string {
-  const trimmedPath = pathname.replace(/\/+$/, '')
-  return trimmedPath === '' ? '/' : trimmedPath
-}
-
-export default function App() {
-  const pathname = normalizePathname(globalThis.location.pathname)
-  const movieDetailMatch = /^\/movies\/(\d+)$/.exec(pathname)
-  const tvDetailMatch = /^\/tv\/(\d+)$/.exec(pathname)
-
-  if (movieDetailMatch) {
-    return <MovieDetailPage movieId={movieDetailMatch[1]} />
-  }
-
-  if (tvDetailMatch) {
-    return <TvDetailPage tvId={tvDetailMatch[1]} />
-  }
-
-  if (pathname === '/' || pathname === '/movies') {
-    return <MovieListPage />
-  }
-
-  if (pathname === '/tv') {
-    return <TvListPage />
-  }
-
+function NotFoundPage() {
   return (
     <main className="movie-page">
       <Nav />
@@ -41,8 +17,21 @@ export default function App() {
       </header>
 
       <div className="actions">
-        <a href="/">Return to the movies</a>
+        <Link to="/movies">Return to the movies</Link>
       </div>
     </main>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/movies" replace />} />
+      <Route path="/movies" element={<MovieListPage />} />
+      <Route path="/movies/:movieId" element={<MovieDetailPage />} />
+      <Route path="/tv" element={<TvListPage />} />
+      <Route path="/tv/:tvId" element={<TvDetailPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   )
 }

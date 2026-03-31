@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import Nav from '../components/Nav'
 import { fetchTvDetails, type TvDetails } from '../services/moviesApi'
 import './MovieDetailPage.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'
-
-type TvDetailPageProps = Readonly<{
-  tvId: string
-}>
 
 function formatEpisodeRuntime(runtimes?: number[]): string {
   const runtime = runtimes?.[0]
@@ -26,12 +23,20 @@ function formatEpisodeRuntime(runtimes?: number[]): string {
   return `${hours}h ${String(minutes).padStart(2, '0')}m`
 }
 
-export default function TvDetailPage({ tvId }: TvDetailPageProps) {
+export default function TvDetailPage() {
+  const { tvId } = useParams<{ tvId: string }>()
   const [show, setShow] = useState<TvDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!tvId) {
+      setShow(null)
+      setError('TV show ID is missing.')
+      setIsLoading(false)
+      return
+    }
+
     const loadShow = async () => {
       setIsLoading(true)
       setError(null)
@@ -57,11 +62,11 @@ export default function TvDetailPage({ tvId }: TvDetailPageProps) {
   return (
     <main className="movie-detail-page">
       <div className="movie-detail-shell">
-        <Nav currentSection="tv" />
+        <Nav />
 
-        <a className="back-link" href="/tv">
+        <Link className="back-link" to="/tv">
           ← Back to popular TV shows
-        </a>
+        </Link>
 
         {isLoading ? <p className="detail-status">Loading TV show details...</p> : null}
 
