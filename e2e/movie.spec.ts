@@ -24,6 +24,11 @@ test('show the details of a movie using the details page URL', async ({ page }) 
   // Assert that title is an h1 heading and is visible
   await expect(page.getByRole('heading', { name: movieDetailsAvatar.title })).toBeVisible()
 
+  // Assert that the tagline is an h2 heading and is visible
+  if (movieDetailsAvatar.tagline) {
+    await expect(page.getByRole('heading', { level: 2, name: movieDetailsAvatar.tagline })).toBeVisible()
+  }
+
   // Assert that the original title
   await expect(page.getByText(movieDetailsAvatar.original_title)).toBeVisible()
 

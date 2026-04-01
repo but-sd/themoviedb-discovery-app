@@ -79,7 +79,7 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
             <div className="movie-detail-copy">
               <p className="movie-detail-kicker">Movie detail</p>
               <h1>{movie.title}</h1>
-              {movie.tagline ? <p className="movie-detail-tagline">{movie.tagline}</p> : null}
+              {movie.tagline ? <h2 className="movie-detail-tagline">{movie.tagline}</h2> : null}
 
               <div className="movie-detail-meta">
                 <span>{releaseYear}</span>
