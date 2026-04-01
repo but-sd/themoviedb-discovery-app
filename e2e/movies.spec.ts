@@ -4,7 +4,7 @@ import {
   mockMovieDetailsApi,
   mockPopularMoviesApi,
 } from './mock-api'
-import { movieDetailsAvatar } from './mock-data'
+import { movieDetailsAvatar, movieDetailsLaFemmeDeMenage, movieDetailsScream7 } from './mock-data'
 
 test.beforeEach(async ({ page }) => {
   // Mock the API responses for movies before each test
@@ -17,17 +17,17 @@ test('shows the movies landing page and loads more results', async ({ page }) =>
   await page.goto('/')
 
   // Assert that the popular movies heading is visible
-  await expect(page.getByRole('heading', { name: 'Popular Movies' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Films populaires' })).toBeVisible()
 
   // Assert that the first page of movies is visible on the page with the correct titles
   await expect(page.getByRole('link', { name: `Open details for ${movieDetailsAvatar.title}` })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Open details for Midnight on the Seine' })).toBeVisible()
+  await expect(page.getByRole('link', { name: `Open details for ${movieDetailsLaFemmeDeMenage.title}` })).toBeVisible()
 
   // Click the "Load More" button to load the second page of movies
-  await page.getByRole('button', { name: 'Load More' }).click()
+  await page.getByRole('button', { name: 'Charger plus' }).click()
 
   // Assert that the second page of movies is visible on the page with the correct titles
-  await expect(page.getByRole('link', { name: 'Open details for Marseille Skies' })).toBeVisible()
+  await expect(page.getByRole('link', { name: `Open details for ${movieDetailsScream7.title}` })).toBeVisible()
 
   // Click on the first movie to navigate to its details page
   await page.getByRole('link', { name: `Open details for ${movieDetailsAvatar.title}` }).click()

@@ -16,7 +16,8 @@
     "build:client": "tsc -b && vite build",
     "build:server": "tsc -p tsconfig.server.json",
     "build:prod": "npm run build:client && npm run build:server",
-    "start:server": "node dist-server/index.js"
+    "start:server": "node dist-server/index.js",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "cors": "^2.8.6",

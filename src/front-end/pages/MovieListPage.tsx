@@ -79,7 +79,7 @@ export default function MovieListPage() {
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Films populaires</h1>
-        <p className="subtitle">Un flux sélectionné des titres tendance en France, récupérés via votre API backend.</p>
+        <p className="subtitle">Films tendances en France, d'après les données de <b>The Movie DB</b>.</p>
       </header>
 
       {error && <p className="error-banner">{error}</p>}

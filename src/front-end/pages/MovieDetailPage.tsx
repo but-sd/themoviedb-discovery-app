@@ -55,11 +55,11 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
     <main className="movie-detail-page">
       <div className="movie-detail-shell">
         <a className="back-link" href="/">
-          ← Back to popular movies
+          ← Retour vers les films populaires
         </a>
 
         {isLoading ? (
-          <p className="detail-status">Loading movie details...</p>
+          <p className="detail-status">Chargement des détails du film...</p>
         ) : null}
 
         {error ? <p className="detail-status detail-error">{error}</p> : null}
@@ -77,14 +77,14 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
             )}
 
             <div className="movie-detail-copy">
-              <p className="movie-detail-kicker">Movie detail</p>
+              <p className="movie-detail-kicker">Détails du film</p>
               <h1>{movie.title}</h1>
               {movie.tagline ? <h2 className="movie-detail-tagline">{movie.tagline}</h2> : null}
 
               <div className="movie-detail-meta">
                 <span>{releaseYear}</span>
                 <span>{formatRuntime(movie.runtime)}</span>
-                <span>Rating {movie.vote_average.toFixed(1)}</span>
+                <span>Note {movie.vote_average.toFixed(1)}</span>
               </div>
 
               {movie.genres && movie.genres.length > 0 ? (
@@ -96,13 +96,13 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
               ) : null}
 
               <section className="movie-detail-section">
-                <h2>Overview</h2>
-                <p>{movie.overview || 'No synopsis is available for this title yet.'}</p>
+                <h2>Synopsis</h2>
+                <p>{movie.overview || 'Aucun synopsis n\'est disponible pour ce titre pour le moment.'}</p>
               </section>
 
               {movie.original_title && movie.original_title !== movie.title ? (
                 <section className="movie-detail-section">
-                  <h2>Original title</h2>
+                  <h2>Titre original</h2>
                   <p>{movie.original_title}</p>
                 </section>
               ) : null}
