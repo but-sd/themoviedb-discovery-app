@@ -7,8 +7,17 @@ export type Movie = {
   poster_path?: string
 }
 
+export type MovieDetails = Movie & {
+  original_title: string
+  backdrop_path?: string
+  runtime?: number
+  tagline?: string
+  overview?: string
+  genres: { id: number; name: string }[]
+}
+
 // Mock data for the movie details page, including all relevant information about the movie such as title, original title, release date, vote average, poster path, backdrop path, runtime, tagline, overview, and genres.
-export const movieDetailsAvatar = {
+export const movieDetailsAvatar: MovieDetails = {
   id: 101,
   title: 'Avatar : De feu et de cendres',
   original_title: 'Avatar: Fire and Ash',
