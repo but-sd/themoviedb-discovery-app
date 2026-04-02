@@ -1,0 +1,49 @@
+.movie-detail-page {
+  --bg-top: #f4efe4;
+  --bg-bottom: #dce8f7;
+  --surface: #ffffffd6;
+  --ink-strong: #1a1f2e;
+  --ink-soft: #42506b;
+  --line: #bfd0e6;
+  --accent: #0f7b8a;
+
+  min-height: 100svh;
+  padding: 32px 24px 40px;
+  background:
+    radial-gradient(circle at 10% 10%, #fff5d8 0, transparent 38%),
+    radial-gradient(circle at 90% 10%, #d4efff 0, transparent 35%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+  color: var(--ink-soft);
+}
+
+.movie-detail-shell {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-flex;
+  margin-bottom: 18px;
+  color: var(--accent);
+  text-decoration: none;
+  font: 600 14px/1 'Avenir Next', 'Trebuchet MS', sans-serif;
+}
+
+.detail-status {
+  margin: 0 0 18px;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.detail-error {
+  color: #9a1f3d;
+}
+
+@media (max-width: 800px) {
+  .movie-detail-page {
+    padding: 22px 14px 30px;
+  }
+}

@@ -1,4 +1,4 @@
-import MovieDetailPage from './pages/MovieDetailPage'
+import MovieDetailPage from './pages/MovieDetailPage/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage'
 import TvDetailPage from './pages/TvDetailPage'
 import TvListPage from './pages/TvListPage'
