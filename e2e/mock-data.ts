@@ -25,7 +25,7 @@ export const movie101: MovieDetails = {
   id: 101,
   title: 'Avatar : De feu et de cendres',
   original_title: 'Avatar: Fire and Ash',
-  release_date: '2024-04-12',
+  release_date: '2025-12-17',
   vote_average: 7.4,
   poster_path: '/avatar.jpg',
   backdrop_path: '/avatar-backdrop.jpg',
