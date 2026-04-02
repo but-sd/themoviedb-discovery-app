@@ -1,21 +1,11 @@
 import { useEffect, useState } from 'react'
 import ItemCard from '../components/ItemCard/ItemCard'
-import { type Item, type TvShow } from "../Types"
+import { type Item } from "../Types"
 import './MovieListPage.css'
 import { fetchPopularTvShows } from '../services/tv-shows-service'
 
-function toMovieCardModel(show: TvShow): Item {
-  return {
-    id: show.id,
-    title: show.name,
-    release_date: show.first_air_date,
-    vote_average: show.vote_average,
-    poster_path: show.poster_path,
-  }
-}
-
 export default function TvListPage() {
-  const [shows, setShows] = useState<TvShow[]>([])
+  const [items, setItems] = useState<Item[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
@@ -27,7 +17,7 @@ export default function TvListPage() {
 
       try {
         const results = await fetchPopularTvShows({ language: 'fr-FR', region: 'FR', page: 1 })
-        setShows(results)
+        setItems(results)
       } catch (loadError) {
         const message =
           loadError instanceof Error ? loadError.message : 'Could not load popular TV shows.'
@@ -51,7 +41,7 @@ export default function TvListPage() {
         region: 'FR',
         page: nextPage,
       })
-      setShows((currentShows) => [...currentShows, ...results])
+      setItems((currentItems) => [...currentItems, ...results])
       setPage(nextPage)
     } catch (loadError) {
       const message =
@@ -72,15 +62,15 @@ export default function TvListPage() {
 
       {error && <p className="error-banner">{error}</p>}
 
-      {isLoading && shows.length === 0 ? (
+      {isLoading && items.length === 0 ? (
         <p className="loading-state">Chargement des séries...</p>
       ) : (
         <section className="movie-grid" aria-live="polite">
-          {shows.map((show) => (
+          {items.map((item) => (
             <ItemCard
-              key={`${show.id}-${show.first_air_date ?? 'unknown'}`}
-              movie={toMovieCardModel(show)}
-              href={`/tv/${show.id}`}
+              key={`${item.id}`}
+              movie={item}
+              href={`/tv/${item.id}`}
             />
           ))}
         </section>

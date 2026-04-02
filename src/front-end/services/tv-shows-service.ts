@@ -1,8 +1,8 @@
-import type { TvShow, TvShowDetails } from "../Types";
+import type { Item, TvShowDetails } from "../Types";
 import type { MediaListParams, MediaRequestParams } from "./moviesApi";
 
 
-export async function fetchPopularTvShows(params?: MediaListParams): Promise<TvShow[]> {
+export async function fetchPopularTvShows(params?: MediaListParams): Promise<Item[]> {
   const searchParams = new URLSearchParams({
     language: params?.language ?? 'fr-FR',
     region: params?.region ?? 'FR',
