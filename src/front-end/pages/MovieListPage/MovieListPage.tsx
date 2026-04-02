@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import MovieCard from '../../components/ItemCard/ItemCard'
+import ItemCard from '../../components/ItemCard/ItemCard'
 import { fetchPopularMovies } from "../../services/movies-service"
 import { type Item } from "../../Types"
 import './MovieListPage.css'
@@ -90,7 +90,7 @@ export default function MovieListPage() {
       ) : (
         <section className="movie-grid" aria-live="polite">
           {movies.map((movie) => (
-            <MovieCard
+            <ItemCard
               key={`${movie.id}-${movie.release_date ?? 'unknown'}`}
               movie={movie}
               href={`/movies/${movie.id}`}

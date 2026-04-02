@@ -3,12 +3,12 @@ import './ItemCard.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w342'
 
-type MovieCardProps = Readonly<{
+type ItemCardProps = Readonly<{
   movie: Item
   href?: string
 }>
 
-export default function MovieCard({ movie, href }: MovieCardProps) {
+export default function ItemCard({ movie, href }: ItemCardProps) {
   const releaseYear = movie.release_date?.slice(0, 4) ?? 'N/A'
   const posterSrc = movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : null
 

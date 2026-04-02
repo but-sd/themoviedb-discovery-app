@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import MovieCard from '../components/ItemCard/ItemCard'
+import ItemCard from '../components/ItemCard/ItemCard'
 import { type Item, type TvShow } from "../Types"
 import './MovieListPage.css'
 import { fetchPopularTvShows } from '../services/tv-shows-service'
@@ -77,7 +77,7 @@ export default function TvListPage() {
       ) : (
         <section className="movie-grid" aria-live="polite">
           {shows.map((show) => (
-            <MovieCard
+            <ItemCard
               key={`${show.id}-${show.first_air_date ?? 'unknown'}`}
               movie={toMovieCardModel(show)}
               href={`/tv/${show.id}`}
