@@ -1,19 +1,23 @@
-// This file contains mock data for movies and TV shows used in the end-to-end tests.
-export type Movie = {
-  id: number
-  title: string
-  release_date?: string
-  vote_average: number
-  poster_path?: string
+import { type Genre, type Movie, type MovieDetails } from "../src/front-end/Types"
+
+export const dramaGenre: Genre = {
+  id: 18,
+  name: 'Drama',
 }
 
-export type MovieDetails = Movie & {
-  original_title: string
-  backdrop_path?: string
-  runtime?: number
-  tagline?: string
-  overview?: string
-  genres: { id: number; name: string }[]
+export const thrillerGenre: Genre = {
+  id: 53,
+  name: 'Thriller',
+}
+
+export const horrorGenre: Genre = {
+  id: 27,
+  name: 'Horror',
+}
+
+export const mysteryGenre: Genre = {
+  id: 80,
+  name: 'Mystery',
 }
 
 // Mock data for the movie details page, including all relevant information about the movie such as title, original title, release date, vote average, poster path, backdrop path, runtime, tagline, overview, and genres.
@@ -29,8 +33,8 @@ export const movie101: MovieDetails = {
   tagline: 'Le monde de Pandora changera à jamais.',
   overview: 'Après la mort de Neteyam, Jake et Neytiri affrontent leur chagrin tout en faisant face au Peuple des Cendres, une tribu Na’vi redoutable menée par le fougueux Varang, alors que le conflit sur Pandora s’intensifie et qu’une nouvelle quête morale s’amorce.',
   genres: [
-    { id: 18, name: 'Drama' },
-    { id: 53, name: 'Thriller' },
+    dramaGenre,
+    thrillerGenre,
   ],
 }
 
@@ -46,8 +50,8 @@ export const movie102: MovieDetails = {
   tagline: 'Découvrez ce qui se cache derrière les portes closes.',
   overview: 'En quête d’un nouveau départ, Millie accepte un poste de femme de ménage à demeure chez Nina et Andrew Winchester, un couple aussi riche qu’énigmatique. Ce qui s’annonce comme l’emploi idéal se transforme rapidement en un jeu dangereux, mêlant séduction, secrets et manipulations. Derrière les portes closes du manoir Winchester se cache un monde de faux-semblants et de révélations inattendues... Un tourbillon de suspense et de scandales qui vous tiendra en haleine jusqu’à la dernière seconde.',
   genres: [
-    { id: 80, name: 'Mystère' },
-    { id: 18, name: 'Thriller' },
+    mysteryGenre,
+    thrillerGenre,
   ],
 }
 
@@ -63,9 +67,9 @@ export const movie103: MovieDetails = {
   tagline: 'Tout doit brûler.',
   overview: 'Lorsqu’un nouveau Ghostface surgit dans la paisible ville où Sidney Prescott a reconstruit sa vie, ses pires cauchemars refont surface. Alors que sa fille devient la prochaine cible, Sidney n’a d’autre choix que de reprendre le combat. Déterminée à protéger les siens, elle doit alors affronter les démons de son passé pour tenter de mettre fin une bonne fois pour toutes au bain de sang.',
   genres: [
-    { id: 27, name: 'Horreur' },
-    { id: 53, name: 'Mystère' },
-    { id: 80, name: 'Crime' },
+    horrorGenre,
+    thrillerGenre,
+    mysteryGenre,
   ],
 }
 

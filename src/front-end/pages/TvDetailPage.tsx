@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { fetchTvDetails, type TvDetails } from '../services/moviesApi'
+import { fetchTvDetails } from '../services/moviesApi'
+import { type TvDetails } from "../Types"
 import './MovieDetailPage.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'

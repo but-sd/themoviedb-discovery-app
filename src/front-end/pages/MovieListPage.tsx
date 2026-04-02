@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import MovieCard from '../components/MovieCard'
-import { fetchPopularMovies, type Movie } from '../services/moviesApi'
+import { fetchPopularMovies } from '../services/moviesApi'
+import { type Movie } from "../Types"
 import './MovieListPage.css'
 
 /**

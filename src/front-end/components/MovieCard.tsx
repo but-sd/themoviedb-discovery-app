@@ -1,4 +1,4 @@
-import { type Movie } from '../services/moviesApi'
+import { type Movie } from "../Types"
 import './MovieCard.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w342'
