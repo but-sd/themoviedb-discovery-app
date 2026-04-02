@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchTvDetails } from '../services/moviesApi'
-import { type TvDetails } from "../Types"
+import { type TvShowDetails } from "../Types"
 import './MovieDetailPage.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'
@@ -27,7 +27,7 @@ function formatEpisodeRuntime(runtimes?: number[]): string {
 }
 
 export default function TvDetailPage({ tvId }: TvDetailPageProps) {
-  const [show, setShow] = useState<TvDetails | null>(null)
+  const [show, setShow] = useState<TvShowDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -80,7 +80,7 @@ export default function TvDetailPage({ tvId }: TvDetailPageProps) {
             <div className="movie-detail-copy">
               <p className="movie-detail-kicker">TV detail</p>
               <h1>{show.name}</h1>
-              {show.tagline ? <p className="movie-detail-tagline">{show.tagline}</p> : null}
+              {show.tagline ? <h2 className="movie-detail-tagline">{show.tagline}</h2> : null}
 
               <div className="movie-detail-meta">
                 <span>{releaseYear}</span>

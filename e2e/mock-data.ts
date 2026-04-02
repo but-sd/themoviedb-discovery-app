@@ -1,4 +1,4 @@
-import { type Genre, type Movie, type MovieDetails } from "../src/front-end/Types"
+import { TvShowDetails, type Genre, type Movie, type MovieDetails } from "../src/front-end/Types"
 
 export const dramaGenre: Genre = {
   id: 18,
@@ -99,3 +99,20 @@ export const moviesPageTwo: Movie[] = [
     poster_path: movie103.poster_path,
   },
 ]
+
+export const tvShow201: TvShowDetails = {
+  id: 201,
+  name: 'Dexter',
+  original_name: 'Dexter',
+  first_air_date: '2023-01-15',
+  vote_average: 8.7,
+  poster_path: '/dexter.jpg',
+  backdrop_path: '/dexter-backdrop.jpg',
+  episode_run_time: [60],
+  tagline: 'Un tueur en série avec un cœur... Priez juste que ce ne soit pas le vôtre.',
+  overview: 'Dexter Morgan, expert médico-légal en analyse de traces de sang pour la police de Miami, mène une double vie en tant que tueur en série. Guidé par un code moral strict inculqué par son père adoptif, il cible uniquement les criminels qui ont échappé à la justice. Alors que Dexter jongle entre sa façade de citoyen modèle et ses pulsions meurtrières, il doit également faire face à des menaces croissantes qui mettent en péril sa vie secrète et celle de ses proches.',
+  genres: [
+    dramaGenre,
+    thrillerGenre,
+  ],
+}

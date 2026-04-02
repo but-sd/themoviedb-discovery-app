@@ -28,7 +28,7 @@ export type MovieDetails = Movie & {
   original_title?: string;
 };
 
-export type TvDetails = TvShow & {
+export type TvShowDetails = TvShow & {
   backdrop_path?: string;
   overview?: string;
   episode_run_time?: number[];

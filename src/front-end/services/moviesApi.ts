@@ -1,4 +1,4 @@
-import type { Movie, TvShow, MovieDetails, TvDetails } from "../Types"
+import type { Movie, TvShow, MovieDetails, TvShowDetails } from "../Types"
 
 type PopularMoviesResponse = {
   results?: Movie[]
@@ -76,7 +76,7 @@ export async function fetchMovieDetails(
 export async function fetchTvDetails(
   tvId: number | string,
   params?: MediaRequestParams,
-): Promise<TvDetails> {
+): Promise<TvShowDetails> {
   const searchParams = new URLSearchParams({
     language: params?.language ?? "fr-FR",
   })
@@ -89,5 +89,5 @@ export async function fetchTvDetails(
     throw new Error(errorText || `Request failed with status ${response.status}`)
   }
 
-  return (await response.json()) as TvDetails
+  return (await response.json()) as TvShowDetails
 }
