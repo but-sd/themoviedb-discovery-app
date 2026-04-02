@@ -1,6 +1,9 @@
 import type { Movie, MovieDetails } from "../Types";
 import type { MediaListParams, MediaRequestParams } from "./moviesApi";
 
+export type MoviesResponse = {
+  results?: Movie[]
+}
 
 export async function fetchPopularMovies(params?: MediaListParams): Promise<Movie[]> {
   const searchParams = new URLSearchParams({
@@ -16,9 +19,11 @@ export async function fetchPopularMovies(params?: MediaListParams): Promise<Movi
     throw new Error(errorText || `Request failed with status ${response.status}`);
   }
 
-  const data = (await response.json()) as PopularMoviesResponse;
+  const data = (await response.json()) as MoviesResponse;
   return data.results ?? [];
-}export async function fetchMovieDetails(
+}
+
+export async function fetchMovieDetails(
   movieId: number | string,
   params?: MediaRequestParams
 ): Promise<MovieDetails> {
@@ -35,8 +40,5 @@ export async function fetchPopularMovies(params?: MediaListParams): Promise<Movi
   }
 
   return (await response.json()) as MovieDetails
-}
-export type PopularMoviesResponse = {
-  results?: Movie[]
 }
 
