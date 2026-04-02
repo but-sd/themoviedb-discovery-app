@@ -1,5 +1,5 @@
 import { type Movie } from "../Types"
-import './MovieCard.css'
+import './ItemCard.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w342'
 
@@ -13,7 +13,7 @@ export default function MovieCard({ movie, href }: MovieCardProps) {
   const posterSrc = movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : null
 
   const content = (
-    <article className="movie-card">
+    <article className="item-card">
       {posterSrc ? (
         <img src={posterSrc} alt={`Poster for ${movie.title}`} className="movie-poster" />
       ) : (
@@ -32,7 +32,7 @@ export default function MovieCard({ movie, href }: MovieCardProps) {
   }
 
   return (
-    <a className="movie-card-link" href={href} aria-label={`Open details for ${movie.title}`}>
+    <a className="item-card-link" href={href} aria-label={`Open details for ${movie.title}`}>
       {content}
     </a>
   )
