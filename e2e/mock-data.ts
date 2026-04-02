@@ -34,7 +34,7 @@ export const movie101: MovieDetails = {
   ],
 }
 
-export const movieDetailsLaFemmeDeMenage: MovieDetails = {
+export const movie102: MovieDetails = {
   id: 102,
   title: 'La Femme de Ménage',
   original_title: 'The Housemaid',
@@ -51,7 +51,7 @@ export const movieDetailsLaFemmeDeMenage: MovieDetails = {
   ],
 }
 
-export const movieDetailsScream7: MovieDetails = {
+export const movie103: MovieDetails = {
   id: 103,
   title: 'Scream 7',
   original_title: 'Scream 7',
@@ -78,20 +78,20 @@ export const moviesPageOne: Movie[] = [
     poster_path: movie101.poster_path,
   },
   {
-    id: movieDetailsLaFemmeDeMenage.id,
-    title: movieDetailsLaFemmeDeMenage.title,
-    release_date: movieDetailsLaFemmeDeMenage.release_date,
-    vote_average: movieDetailsLaFemmeDeMenage.vote_average,
-    poster_path: movieDetailsLaFemmeDeMenage.poster_path,
+    id: movie102.id,
+    title: movie102.title,
+    release_date: movie102.release_date,
+    vote_average: movie102.vote_average,
+    poster_path: movie102.poster_path,
   },
 ]
 
 export const moviesPageTwo: Movie[] = [
   {
-    id: movieDetailsScream7.id,
-    title: movieDetailsScream7.title,
-    release_date: movieDetailsScream7.release_date,
-    vote_average: movieDetailsScream7.vote_average,
-    poster_path: movieDetailsScream7.poster_path,
+    id: movie103.id,
+    title: movie103.title,
+    release_date: movie103.release_date,
+    vote_average: movie103.vote_average,
+    poster_path: movie103.poster_path,
   },
 ]
