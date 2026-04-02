@@ -1,15 +1,7 @@
-export type Movie = {
+export type Item = {
   id: number;
   title: string;
   release_date?: string;
-  vote_average: number;
-  poster_path?: string;
-};
-
-export type TvShow = {
-  id: number;
-  name: string;
-  first_air_date?: string;
   vote_average: number;
   poster_path?: string;
 };
@@ -19,7 +11,7 @@ export type Genre = {
   name: string;
 };
 
-export type MovieDetails = Movie & {
+export type MovieDetails = Item & {
   backdrop_path?: string;
   overview?: string;
   runtime?: number;
@@ -28,7 +20,7 @@ export type MovieDetails = Movie & {
   original_title?: string;
 };
 
-export type TvShowDetails = TvShow & {
+export type TvShowDetails = Item & {
   backdrop_path?: string;
   overview?: string;
   episode_run_time?: number[];

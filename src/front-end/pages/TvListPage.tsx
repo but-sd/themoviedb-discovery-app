@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import MovieCard from '../components/ItemCard/ItemCard'
-import { type Movie, type TvShow } from "../Types"
+import { type Item, type TvShow } from "../Types"
 import './MovieListPage.css'
 import { fetchPopularTvShows } from '../services/tv-shows-service'
 
-function toMovieCardModel(show: TvShow): Movie {
+function toMovieCardModel(show: TvShow): Item {
   return {
     id: show.id,
     title: show.name,

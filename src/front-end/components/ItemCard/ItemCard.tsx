@@ -1,10 +1,10 @@
-import { type Movie } from "../../Types"
+import { type Item } from "../../Types"
 import './ItemCard.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w342'
 
 type MovieCardProps = Readonly<{
-  movie: Movie
+  movie: Item
   href?: string
 }>
 

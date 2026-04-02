@@ -1,11 +1,11 @@
-import type { Movie, MovieDetails } from "../Types";
+import type { Item, MovieDetails } from "../Types";
 import type { MediaListParams, MediaRequestParams } from "./moviesApi";
 
 export type MoviesResponse = {
-  results?: Movie[]
+  results?: Item[]
 }
 
-export async function fetchPopularMovies(params?: MediaListParams): Promise<Movie[]> {
+export async function fetchPopularMovies(params?: MediaListParams): Promise<Item[]> {
   const searchParams = new URLSearchParams({
     language: params?.language ?? 'fr-FR',
     region: params?.region ?? 'FR',

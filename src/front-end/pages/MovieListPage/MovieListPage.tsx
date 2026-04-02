@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import MovieCard from '../../components/ItemCard/ItemCard'
 import { fetchPopularMovies } from "../../services/movies-service"
-import { type Movie } from "../../Types"
+import { type Item } from "../../Types"
 import './MovieListPage.css'
 
 /**
@@ -9,7 +9,7 @@ import './MovieListPage.css'
  */
 export default function MovieListPage() {
   // State for movies, loading status, error message, and current page for pagination
-  const [movies, setMovies] = useState<Movie[]>([])
+  const [movies, setMovies] = useState<Item[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
