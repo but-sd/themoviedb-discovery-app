@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import MovieCard from '../components/ItemCard'
+import MovieCard from '../components/ItemCard/ItemCard'
 import { type Movie, type TvShow } from "../Types"
 import './MovieListPage.css'
 import { fetchPopularTvShows } from '../services/tv-shows-service'
