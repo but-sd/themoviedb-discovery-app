@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import MovieCard from '../components/MovieCard'
-import { fetchPopularTvShows } from '../services/moviesApi'
 import { type Movie, type TvShow } from "../Types"
 import './MovieListPage.css'
+import { fetchPopularTvShows } from '../services/tv-shows-service'
 
 function toMovieCardModel(show: TvShow): Movie {
   return {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import TvShowDetailCard from '../components/TvShowDetailCard'
 import { type TvShowDetails } from '../Types'
-import { fetchTvDetails } from '../services/moviesApi'
+import { fetchTvDetails } from "../services/tv-shows-service"
 import './MovieDetailPage.css'
 
 type TvDetailPageProps = Readonly<{
