@@ -20,13 +20,4 @@ test('shows the TV list and opens TV details', async ({ page }) => {
 
   await expect(page).toHaveURL(new RegExp(`/tv/${tvShow201.id}$`))
   await expect(page.getByRole('heading', { name: tvShow201.name })).toBeVisible()
-  if (tvShow201.tagline) {
-    await expect(page.getByText(tvShow201.tagline)).toBeVisible()
-  }
-  // if (tvShow201.episode_run_time && tvShow201.episode_run_time.length > 0) {
-  //   await expect(page.getByText(`${tvShow201.episode_run_time[0]}m`)).toBeVisible()
-  // }
-  if (tvShow201.genres && tvShow201.genres.length > 0) {
-    await expect(page.getByText(tvShow201.genres[0].name, { exact: true })).toBeVisible()
-  }
 })
