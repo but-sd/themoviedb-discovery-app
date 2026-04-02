@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 // Test case: Show the details of a movie using the details page URL
 test('show the details of a movie using the details page URL', async ({ page }) => {
   // get the movie "Avatar" from the mock data
-  const { movieDetailsAvatar } = await import('./mock-data')
+  const { movie101: movieDetailsAvatar } = await import('./mock-data')
 
   // Mock the api call before navigating
   await page.route(`**/api/movies/${movieDetailsAvatar.id}?**`, async (route) => {

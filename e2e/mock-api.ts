@@ -1,5 +1,5 @@
 import type { Page, Route } from '@playwright/test'
-import { Movie, movieDetailsAvatar, moviesPageOne, moviesPageTwo } from './mock-data'
+import { Movie, movie101, moviesPageOne, moviesPageTwo } from './mock-data'
 
 type TvShow = {
   id: number
@@ -51,7 +51,7 @@ async function fulfillJson(route: Route, body: unknown) {
   })
 }
 
-export async function mockMovieDetailsApi(page: Page, details = movieDetailsAvatar) {
+export async function mockMovieDetailsApi(page: Page, details = movie101) {
   await page.route('**/api/movies/101?**', async (route) => {
     await fulfillJson(route, details)
   })

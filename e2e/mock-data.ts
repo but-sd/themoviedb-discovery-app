@@ -17,7 +17,7 @@ export type MovieDetails = Movie & {
 }
 
 // Mock data for the movie details page, including all relevant information about the movie such as title, original title, release date, vote average, poster path, backdrop path, runtime, tagline, overview, and genres.
-export const movieDetailsAvatar: MovieDetails = {
+export const movie101: MovieDetails = {
   id: 101,
   title: 'Avatar : De feu et de cendres',
   original_title: 'Avatar: Fire and Ash',
@@ -71,11 +71,11 @@ export const movieDetailsScream7: MovieDetails = {
 
 export const moviesPageOne: Movie[] = [
   {
-    id: movieDetailsAvatar.id,
-    title: movieDetailsAvatar.title,
-    release_date: movieDetailsAvatar.release_date,
-    vote_average: movieDetailsAvatar.vote_average,
-    poster_path: movieDetailsAvatar.poster_path,
+    id: movie101.id,
+    title: movie101.title,
+    release_date: movie101.release_date,
+    vote_average: movie101.vote_average,
+    poster_path: movie101.poster_path,
   },
   {
     id: movieDetailsLaFemmeDeMenage.id,
