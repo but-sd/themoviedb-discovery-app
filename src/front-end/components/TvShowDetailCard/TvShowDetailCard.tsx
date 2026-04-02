@@ -1,4 +1,4 @@
-import { type TvShowDetails } from '../Types'
+import { type TvShowDetails } from '../../Types'
 import './TvShowDetailCard.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'

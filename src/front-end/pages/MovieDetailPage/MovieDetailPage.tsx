@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import MovieDetailCard from '../../components/MovieDetailCard'
+import MovieDetailCard from '../../components/MovieDetailCard/MovieDetailCard'
 import { fetchMovieDetails } from "../../services/movies-service"
 import { type MovieDetails } from "../../Types"
 import './MovieDetailPage.css'
