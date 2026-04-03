@@ -92,7 +92,7 @@ export default function MovieListPage() {
           {movies.map((movie) => (
             <ItemCard
               key={`${movie.id}-${movie.release_date ?? 'unknown'}`}
-              movie={movie}
+              item={movie}
               href={`/movies/${movie.id}`}
             />
           ))}

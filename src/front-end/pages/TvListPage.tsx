@@ -69,7 +69,7 @@ export default function TvListPage() {
           {items.map((item) => (
             <ItemCard
               key={`${item.id}`}
-              movie={item}
+              item={item}
               href={`/tv/${item.id}`}
             />
           ))}
