@@ -1,9 +1,14 @@
 import 'dotenv/config'
 import cors from 'cors'
 import express from 'express'
+import { type Item, type MovieDetails, type TvShowDetails } from "../front-end/Types"
 
 const app = express()
 const port = process.env.PORT || 3001
+
+export type ItemsResponse = {
+  results?: Item[]
+}
 
 function getSingleQueryParam(value: unknown, fallback: string): string {
   if (typeof value === 'string' && value.length > 0) {
@@ -57,7 +62,7 @@ app.get('/api/tv/popular', async (req, res) => {
       return
     }
 
-    const data = await tmdbResponse.json()
+    const data = await tmdbResponse.json() as ItemsResponse
     res.json(data)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown server error'
@@ -93,7 +98,7 @@ app.get('/api/tv/:id', async (req, res) => {
       return
     }
 
-    const data = await tmdbResponse.json()
+    const data = await tmdbResponse.json() as TvShowDetails
     res.json(data)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown server error'
@@ -132,7 +137,7 @@ app.get('/api/movies/popular', async (req, res) => {
       return
     }
 
-    const data = await tmdbResponse.json()
+    const data = await tmdbResponse.json() as ItemsResponse
     res.json(data)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown server error'
@@ -174,7 +179,7 @@ app.get('/api/movies/:id', async (req, res) => {
       return
     }
 
-    const data = await tmdbResponse.json()
+    const data = await tmdbResponse.json() as MovieDetails
     res.json(data)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown server error'
