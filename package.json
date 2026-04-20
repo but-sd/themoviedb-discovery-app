@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
