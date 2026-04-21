@@ -21,10 +21,12 @@ export type MovieDetails = Item & {
 };
 
 export type TvShowDetails = Item & {
+  name: string;
   backdrop_path?: string;
   overview?: string;
   episode_run_time?: number[];
   genres?: Genre[];
   tagline?: string;
   original_name?: string;
+  first_air_date?: string;
 };

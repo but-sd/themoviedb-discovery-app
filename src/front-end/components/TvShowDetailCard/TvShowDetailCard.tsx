@@ -1,27 +1,10 @@
 import { type TvShowDetails } from '../../Types'
-import { DETAIL_IMAGE_BASE_URL } from '../commons'
+import { DETAIL_IMAGE_BASE_URL, formatRuntime } from '../commons'
 import './TvShowDetailCard.css'
 
 type TvShowDetailCardProps = Readonly<{
   show: TvShowDetails
 }>
-
-function formatEpisodeRuntime(runtimes?: number[]): string {
-  const runtime = runtimes?.[0]
-
-  if (!runtime) {
-    return 'Runtime unavailable'
-  }
-
-  const hours = Math.floor(runtime / 60)
-  const minutes = runtime % 60
-
-  if (hours === 0) {
-    return `${minutes}m`
-  }
-
-  return `${hours}h ${String(minutes).padStart(2, '0')}m`
-}
 
 export default function TvShowDetailCard({ show }: TvShowDetailCardProps) {
   const heroImage = show.backdrop_path ?? show.poster_path
@@ -46,7 +29,7 @@ export default function TvShowDetailCard({ show }: TvShowDetailCardProps) {
 
         <div className="tv-detail-meta">
           <span>{releaseYear}</span>
-          <span>{formatEpisodeRuntime(show.episode_run_time)}</span>
+          <span>{formatRuntime(show.episode_run_time?.[0] ?? 0)}</span>
           <span>Rating {show.vote_average.toFixed(1)}</span>
         </div>
 
