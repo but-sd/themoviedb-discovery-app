@@ -1,27 +1,17 @@
 import { type MovieDetails } from "../../Types"
+import { DETAIL_IMAGE_BASE_URL, formatRuntime } from "../commons"
 import './MovieDetailCard.css'
 
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'
-
+// Props for the MovieDetailCard component, which includes a MovieDetails object containing all the necessary information to display the movie details.
 type MovieDetailCardProps = Readonly<{
   movie: MovieDetails
 }>
 
-function formatRuntime(runtime?: number): string {
-  if (!runtime) {
-    return 'Runtime unavailable'
-  }
-
-  const hours = Math.floor(runtime / 60)
-  const minutes = runtime % 60
-
-  if (hours === 0) {
-    return `${minutes}m`
-  }
-
-  return `${hours}h ${String(minutes).padStart(2, '0')}m`
-}
-
+/**
+ * MovieDetailCard component displays detailed information about a movie, including a hero image, title, tagline, release year, runtime, rating, genres, synopsis, and original title if different from the main title. It handles missing data gracefully by showing placeholders and fallback text where necessary.
+ * @param param0 Props for the MovieDetailCard component, which includes a MovieDetails object. 
+ * @returns JSX.Element representing the movie detail card.
+ */
 export default function MovieDetailCard({ movie }: MovieDetailCardProps) {
   const heroImage = movie.backdrop_path ?? movie.poster_path
   const releaseYear = movie.release_date?.slice(0, 4) ?? 'N/A'
@@ -31,7 +21,7 @@ export default function MovieDetailCard({ movie }: MovieDetailCardProps) {
       {heroImage ? (
         <img
           className="movie-detail-hero"
-          src={`${IMAGE_BASE_URL}${heroImage}`}
+          src={`${DETAIL_IMAGE_BASE_URL}${heroImage}`}
           alt={`Artwork for ${movie.title}`}
         />
       ) : (

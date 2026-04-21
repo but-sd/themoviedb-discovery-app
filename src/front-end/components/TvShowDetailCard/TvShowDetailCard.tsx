@@ -1,7 +1,6 @@
 import { type TvShowDetails } from '../../Types'
+import { DETAIL_IMAGE_BASE_URL } from '../commons'
 import './TvShowDetailCard.css'
-
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w780'
 
 type TvShowDetailCardProps = Readonly<{
   show: TvShowDetails
@@ -33,7 +32,7 @@ export default function TvShowDetailCard({ show }: TvShowDetailCardProps) {
       {heroImage ? (
         <img
           className="tv-detail-hero"
-          src={`${IMAGE_BASE_URL}${heroImage}`}
+          src={`${DETAIL_IMAGE_BASE_URL}${heroImage}`}
           alt={`Artwork for ${show.name}`}
         />
       ) : (
