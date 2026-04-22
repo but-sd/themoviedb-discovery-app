@@ -13,12 +13,18 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['src/front-end/**/*.test.{ts,tsx}'],
+    include: [
+      'src/back-end/**/*.test.ts',
+      'src/front-end/**/*.test.{ts,tsx}'
+    ],
     exclude: ['e2e/**', 'node_modules/**'],
     environment: 'jsdom',
     coverage: {
       provider: 'v8',
-      include: ['src/front-end/**/*.{ts,tsx}'],
+      include: [
+        'src/back-end/**/*.ts',
+        'src/front-end/**/*.{ts,tsx}'
+      ],
       exclude: ['src/front-end/**/*.test.{ts,tsx}', 'src/front-end/main.tsx'],
       reporter: ['text', 'html'],
     },
