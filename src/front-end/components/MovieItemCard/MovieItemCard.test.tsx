@@ -33,4 +33,34 @@ describe('MovieItemCard', () => {
     expect(screen.getByText('2009 · Rating 7.8')).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Open details for Avatar' }).getAttribute('href')).toBe('/movies/1')
   })
+
+  it('renders placeholder when poster is missing', () => {
+    const movie: MovieItem = {
+      adult: false,
+      backdrop_path: null,
+      genre_ids: [12],
+      id: 2,
+      original_language: 'en',
+      original_title: 'No Poster Movie',
+      overview: 'A movie without a poster',
+      popularity: 50,
+      poster_path: null,
+      release_date: '2020-01-01',
+      title: 'No Poster Movie',
+      video: false,
+      vote_average: 5.0,
+      vote_count: 100,
+    }
+
+    render(
+      <MemoryRouter>
+        <MovieItemCard movie={movie} />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('heading', { name: 'No Poster Movie' })).toBeTruthy()
+    expect(screen.getByText('2020 · Rating 5.0')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Open details for No Poster Movie' }).getAttribute('href')).toBe('/movies/2')
+    expect(screen.getByRole('img', { hidden: true })).toBeTruthy()
+  })
 })
