@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import MovieDetailCard from '../../components/MovieDetailCard/MovieDetailCard'
-import { fetchMovieDetails } from "../../services/movies-service"
-import { type MovieDetails } from "../../../back-end/api-schemas"
+import { type MovieDetails } from '../../../back-end/api-schemas'
+import { fetchMovieDetails } from '../../services/movies-service'
 import './MovieDetailPage.css'
 
 type MovieDetailPageProps = Readonly<{
@@ -36,9 +37,9 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
   return (
     <main className="movie-detail-page">
       <div className="movie-detail-shell">
-        <a className="back-link" href="/">
+        <Link className="back-link" to="/movies">
           ← Retour vers les films populaires
-        </a>
+        </Link>
 
         {isLoading ? (
           <p className="detail-status">Chargement des détails du film...</p>
