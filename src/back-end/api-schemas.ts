@@ -109,6 +109,8 @@ export const TvShowDetailsSchema = ItemSchema.extend({
 
 export type Item = z.infer<typeof ItemSchema>
 export type Genre = z.infer<typeof GenreSchema>
+export type MovieItem = z.infer<typeof MovieItemSchema>
+export type TvItem = z.infer<typeof TvItemSchema>
 export type ServiceInfoResponse = z.infer<typeof ServiceInfoResponseSchema>
 export type HealthResponse = z.infer<typeof HealthResponseSchema>
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>

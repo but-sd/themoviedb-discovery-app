@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import ItemCard from '../components/ItemCard/ItemCard'
-import { type Item } from "../../back-end/api-schemas"
-import './MovieListPage.css'
+import { type TvItem } from '../../back-end/api-schemas'
+import TvItemCard from '../components/TvItemCard/TvItemCard'
 import { fetchPopularTvShows } from '../services/tv-shows-service'
+import './MovieListPage.css'
 
 export default function TvListPage() {
-  const [items, setItems] = useState<Item[]>([])
+  const [items, setItems] = useState<TvItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
@@ -56,22 +56,20 @@ export default function TvListPage() {
     <main className="movie-page">
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
-        <h1>Séries populaires</h1>
-        <p className="subtitle">Séries tendances en France, d'après les données de <b>The Movie DB</b>.</p>
+        <h1>Series populaires</h1>
+        <p className="subtitle">
+          Series tendances en France, d'apres les donnees de <b>The Movie DB</b>.
+        </p>
       </header>
 
-      {error && <p className="error-banner">{error}</p>}
+      {error ? <p className="error-banner">{error}</p> : null}
 
       {isLoading && items.length === 0 ? (
-        <p className="loading-state">Chargement des séries...</p>
+        <p className="loading-state">Chargement des series...</p>
       ) : (
         <section className="movie-grid" aria-live="polite">
           {items.map((item) => (
-            <ItemCard
-              key={`${item.id}`}
-              item={item}
-              href={`/tv/${item.id}`}
-            />
+            <TvItemCard key={item.id} show={item} />
           ))}
         </section>
       )}

@@ -1,34 +1,37 @@
-import type { Item, TvShowDetails } from "../../back-end/api-schemas";
-import type { MediaListParams, MediaRequestParams } from "./moviesApi";
+import type {
+  TvItem,
+  TvPopularResponse,
+  TvShowDetails,
+} from '../../back-end/api-schemas'
+import type { MediaListParams, MediaRequestParams } from './moviesApi'
 
-
-export async function fetchPopularTvShows(params?: MediaListParams): Promise<Item[]> {
+export async function fetchPopularTvShows(params?: MediaListParams): Promise<TvItem[]> {
   const searchParams = new URLSearchParams({
     language: params?.language ?? 'fr-FR',
     region: params?.region ?? 'FR',
     page: String(params?.page ?? 1),
-  });
+  })
 
-  const response = await fetch(`/api/tv/popular?${searchParams.toString()}`);
+  const response = await fetch(`/api/tv/popular?${searchParams.toString()}`)
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || `Request failed with status ${response.status}`);
+    const errorText = await response.text()
+    throw new Error(errorText || `Request failed with status ${response.status}`)
   }
 
-  const data = (await response.json()) as PopularTvShowsResponse;
-  return data.results ?? [];
+  const data = (await response.json()) as TvPopularResponse
+  return data.results ?? []
 }
 
 export async function fetchTvDetails(
   tvId: number | string,
-  params?: MediaRequestParams
+  params?: MediaRequestParams,
 ): Promise<TvShowDetails> {
   const searchParams = new URLSearchParams({
-    language: params?.language ?? "fr-FR",
+    language: params?.language ?? 'fr-FR',
   })
   const response = await fetch(
-    `/api/tv/${encodeURIComponent(String(tvId))}?${searchParams.toString()}`
+    `/api/tv/${encodeURIComponent(String(tvId))}?${searchParams.toString()}`,
   )
 
   if (!response.ok) {
@@ -38,7 +41,3 @@ export async function fetchTvDetails(
 
   return (await response.json()) as TvShowDetails
 }
-export type PopularTvShowsResponse = {
-  results?: TvShow[]
-}
-
