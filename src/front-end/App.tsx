@@ -2,7 +2,7 @@ import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import NavBar from './components/NavBar/NavBar'
 import MovieDetailPage from './pages/MovieDetailPage/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage/MovieListPage'
-import TvDetailPage from './pages/TvDetailPage'
+import TvDetailPage from './pages/TvDetailPage/TvDetailPage'
 import TvListPage from './pages/TvListPage/TvListPage'
 
 function MovieDetailRoute() {

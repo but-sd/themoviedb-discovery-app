@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import TvShowDetailCard from '../components/TvShowDetailCard/TvShowDetailCard'
-import { type TvShowDetails } from '../../back-end/api-schemas'
-import { fetchTvDetails } from '../services/tv-shows-service'
-import './MovieDetailPage/MovieDetailPage.css'
+import TvShowDetailCard from '../../components/TvShowDetailCard/TvShowDetailCard'
+import { type TvShowDetails } from '../../../back-end/api-schemas'
+import { fetchTvDetails } from '../../services/tv-shows-service'
+import './TvDetailPage.css'
 
 type TvDetailPageProps = Readonly<{
   tvId: string
@@ -35,8 +35,8 @@ export default function TvDetailPage({ tvId }: TvDetailPageProps) {
   }, [tvId])
 
   return (
-    <main className="movie-detail-page">
-      <div className="movie-detail-shell">
+    <main className="tv-show-detail-page">
+      <div className="tv-show-detail-shell">
         <Link className="back-link" to="/tv">
           ← Back to popular TV shows
         </Link>
