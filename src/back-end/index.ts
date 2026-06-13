@@ -2,6 +2,7 @@ import 'dotenv/config'
 import cors from 'cors'
 import express from 'express'
 import { registerApiSpec } from './api-spec'
+import { serviceEndpoints, type ServiceInfoResponse } from './api-schemas'
 import { registerMoviesApi } from './movies-api'
 import { registerTvApi } from './tv-api'
 
@@ -15,14 +16,16 @@ app.use(express.json())
 
 // Service information endpoint
 app.get('/', (_req, res) => {
-  res.json({
+  const response: ServiceInfoResponse = {
     service: 'themoviedb-discovery-backend',
     status: 'ok',
     version: '1.0.0',
     docs: '/api/docs',
     openapi: '/openapi.json',
-    endpoints: ['/api/health', '/api/movies/popular', '/api/movies/:id', '/api/tv/popular', '/api/tv/:id'],
-  })
+    endpoints: [...serviceEndpoints],
+  }
+
+  res.json(response)
 })
 
 // Health check endpoint

@@ -1,6 +1,5 @@
 import type { Express } from 'express'
-import type { TvPopularResponse } from './types'
-import type { TvShowDetails } from '../front-end/Types'
+import type { TvPopularResponse, TvShowDetails } from './api-schemas'
 import { TMDB_API_BASE_URL, getRequiredTmdbApiKey, getSingleQueryParam } from './utils'
 
 /**
