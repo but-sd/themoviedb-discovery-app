@@ -3,7 +3,16 @@ import type {
   TvPopularResponse,
   TvShowDetails,
 } from '../../back-end/api-schemas'
-import type { MediaListParams, MediaRequestParams } from './moviesApi'
+
+type MediaListParams = {
+  language?: string
+  region?: string
+  page?: number
+}
+
+type MediaRequestParams = {
+  language?: string
+}
 
 export async function fetchPopularTvShows(params?: MediaListParams): Promise<TvItem[]> {
   const searchParams = new URLSearchParams({

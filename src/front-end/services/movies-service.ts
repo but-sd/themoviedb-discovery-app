@@ -3,7 +3,16 @@ import type {
   MovieItem,
   MoviePopularResponse,
 } from '../../back-end/api-schemas'
-import type { MediaListParams, MediaRequestParams } from './moviesApi'
+
+type MediaListParams = {
+  language?: string
+  region?: string
+  page?: number
+}
+
+type MediaRequestParams = {
+  language?: string
+}
 
 export async function fetchPopularMovies(params?: MediaListParams): Promise<MovieItem[]> {
   const searchParams = new URLSearchParams({
