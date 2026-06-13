@@ -1,4 +1,5 @@
-import { type Item } from "../../../back-end/api-schemas"
+import { Link } from 'react-router-dom'
+import { type Item } from '../../../back-end/api-schemas'
 import './ItemCard.css'
 
 // Base URL for fetching poster images from TMDb with a width of 342 pixels. This size is a good balance between quality and loading performance for item cards.
@@ -38,10 +39,10 @@ export default function ItemCard({ item, href }: ItemCardProps) {
     </article>
   )
 
-  // The entire card is wrapped in an anchor tag to make it clickable, linking to the details page for the item. An aria-label is provided for accessibility to describe the link's purpose.
+  // The entire card is wrapped in a router link to keep navigation client-side inside the app. An aria-label is provided for accessibility to describe the link's purpose.
   return (
-    <a className="item-card-link" href={href} aria-label={`Open details for ${item.title}`}>
+    <Link className="item-card-link" to={href} aria-label={`Open details for ${item.title}`}>
       {content}
-    </a>
+    </Link>
   )
 }
