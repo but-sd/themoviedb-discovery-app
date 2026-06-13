@@ -16,6 +16,10 @@ Default client URL:
 
 During development, API calls to /api are proxied to the backend server.
 
+For backend endpoint details, see the live docs at:
+
+- [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
+
 ## Frontend Structure
 
 Main frontend modules are in src/front-end:

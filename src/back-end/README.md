@@ -25,27 +25,27 @@ Set one of the following variables so backend requests to TMDb are authenticated
 
 ### Service and Documentation
 
-- `GET /`
+- `GET /` (Docs: [Service info](http://localhost:3001/api/docs/#/System/getServiceInfo))
   - Returns service metadata and useful links.
-- `GET /api/health`
+- `GET /api/health` (Docs: [Health check](http://localhost:3001/api/docs/#/System/getHealth))
   - Returns `{ "status": "ok" }`.
-- `GET /openapi.json`
+- `GET /openapi.json` (Docs: [OpenAPI JSON route](http://localhost:3001/api/docs/#/System/getOpenApiJson))
   - Returns OpenAPI 3.1 JSON.
-- `GET /api/docs`
+- `GET /api/docs` (Docs: [Swagger UI](http://localhost:3001/api/docs))
   - Swagger UI for the API.
 
 ### Movies
 
-- `GET /api/movies/popular`
+- `GET /api/movies/popular` (Docs: [Popular movies](http://localhost:3001/api/docs/#/Movies/getPopularMovies))
   - Query params: `language`, `region`, `page`
-- `GET /api/movies/:id`
+- `GET /api/movies/:id` (Docs: [Movie details](http://localhost:3001/api/docs/#/Movies/getMovieDetails))
   - Query params: `language`
 
 ### TV Shows
 
-- `GET /api/tv/popular`
+- `GET /api/tv/popular` (Docs: [Popular TV shows](http://localhost:3001/api/docs/#/TV/getPopularTvShows))
   - Query params: `language`, `region`, `page`
-- `GET /api/tv/:id`
+- `GET /api/tv/:id` (Docs: [TV show details](http://localhost:3001/api/docs/#/TV/getTvShowDetails))
   - Query params: `language`
 
 ## Backend Structure

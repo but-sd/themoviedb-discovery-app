@@ -21,6 +21,7 @@ const MoviePopularResponse = MoviePopularResponseSchema.meta({ id: 'MoviePopular
 const TvPopularResponse = TvPopularResponseSchema.meta({ id: 'TvPopularResponse' })
 const MovieDetails = MovieDetailsSchema.meta({ id: 'MovieDetails' })
 const TvShowDetails = TvShowDetailsSchema.meta({ id: 'TvShowDetails' })
+const OpenApiDocumentResponse = z.object({ openapi: z.string() }).passthrough().meta({ id: 'OpenApiDocumentResponse' })
 
 const popularQuerySchema = z.object({
   language: z.string().optional().default('fr-FR'),
@@ -37,6 +38,7 @@ registry.registerPath({
   path: '/',
   tags: ['System'],
   summary: 'Service information',
+  operationId: 'getServiceInfo',
   responses: {
     200: {
       description: 'Service metadata and useful links',
@@ -54,6 +56,7 @@ registry.registerPath({
   path: '/api/health',
   tags: ['System'],
   summary: 'Health check',
+  operationId: 'getHealth',
   responses: {
     200: {
       description: 'Server is healthy',
@@ -68,9 +71,28 @@ registry.registerPath({
 
 registry.registerPath({
   method: 'get',
+  path: '/openapi.json',
+  tags: ['System'],
+  summary: 'Get OpenAPI JSON',
+  operationId: 'getOpenApiJson',
+  responses: {
+    200: {
+      description: 'OpenAPI 3.1 JSON document',
+      content: {
+        'application/json': {
+          schema: OpenApiDocumentResponse,
+        },
+      },
+    },
+  },
+})
+
+registry.registerPath({
+  method: 'get',
   path: '/api/movies/popular',
   tags: ['Movies'],
   summary: 'Get popular movies',
+  operationId: 'getPopularMovies',
   request: {
     query: popularQuerySchema,
   },
@@ -107,6 +129,7 @@ registry.registerPath({
   path: '/api/movies/{id}',
   tags: ['Movies'],
   summary: 'Get movie details by ID',
+  operationId: 'getMovieDetails',
   request: {
     params: z.object({
       id: z.string(),
@@ -146,6 +169,7 @@ registry.registerPath({
   path: '/api/tv/popular',
   tags: ['TV'],
   summary: 'Get popular TV shows',
+  operationId: 'getPopularTvShows',
   request: {
     query: popularQuerySchema,
   },
@@ -182,6 +206,7 @@ registry.registerPath({
   path: '/api/tv/{id}',
   tags: ['TV'],
   summary: 'Get TV show details by ID',
+  operationId: 'getTvShowDetails',
   request: {
     params: z.object({
       id: z.string(),
