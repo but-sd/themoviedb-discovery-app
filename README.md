@@ -71,3 +71,16 @@ export default defineConfig([
   },
 ])
 ```
+
+## Backend API Spec
+
+When the backend server is running, the API specification and docs are available at:
+
+- `GET /openapi.json` (OpenAPI 3.1 JSON)
+- `GET /api/docs` (Swagger UI)
+
+Start the backend in development mode with:
+
+```bash
+npm run dev:server
+```
