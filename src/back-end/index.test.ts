@@ -28,6 +28,10 @@ type ApiSpecMockModule = {
   registerApiSpec: ReturnType<typeof vi.fn>
 }
 
+type HealthApiMockModule = {
+  registerHealthApi: ReturnType<typeof vi.fn>
+}
+
 vi.mock('express', () => {
   const appMock: AppMock = {
     use: vi.fn(),
@@ -65,6 +69,10 @@ vi.mock('./api-spec', () => ({
   registerApiSpec: vi.fn(),
 }))
 
+vi.mock('./health-api', () => ({
+  registerHealthApi: vi.fn(),
+}))
+
 describe('back-end index bootstrap', () => {
   beforeEach(() => {
     vi.resetModules()
@@ -77,7 +85,7 @@ describe('back-end index bootstrap', () => {
     vi.restoreAllMocks()
   })
 
-  it('wires middleware, root route, health route, APIs, and listens on env PORT', async () => {
+  it('wires middleware, root route, APIs, and listens on env PORT', async () => {
     process.env.PORT = '4321'
 
     await import('./index')
@@ -87,6 +95,7 @@ describe('back-end index bootstrap', () => {
     const tvApiModule = (await import('./tv-api')) as unknown as TvApiMockModule
     const moviesApiModule = (await import('./movies-api')) as unknown as MoviesApiMockModule
     const apiSpecModule = (await import('./api-spec')) as unknown as ApiSpecMockModule
+    const healthApiModule = (await import('./health-api')) as unknown as HealthApiMockModule
 
     const app = expressModule.__appMock
     const corsMw = corsModule.default.mock.results[0]?.value
@@ -98,10 +107,12 @@ describe('back-end index bootstrap', () => {
     expect(app.use).toHaveBeenNthCalledWith(2, jsonMw)
 
     expect(app.get).toHaveBeenCalledWith('/', expect.any(Function))
-    expect(app.get).toHaveBeenCalledWith('/api/health', expect.any(Function))
 
     expect(apiSpecModule.registerApiSpec).toHaveBeenCalledTimes(1)
     expect(apiSpecModule.registerApiSpec).toHaveBeenCalledWith(app)
+
+    expect(healthApiModule.registerHealthApi).toHaveBeenCalledTimes(1)
+    expect(healthApiModule.registerHealthApi).toHaveBeenCalledWith(app)
 
     expect(tvApiModule.registerTvApi).toHaveBeenCalledTimes(1)
     expect(tvApiModule.registerTvApi).toHaveBeenCalledWith(app)
@@ -163,34 +174,5 @@ describe('back-end index bootstrap', () => {
         '/api/tv/:id',
       ],
     })
-  })
-
-  it('health route handler returns { status: "ok" }', async () => {
-    await import('./index')
-
-    const expressModule = (await import('express')) as unknown as ExpressMockModule
-    const app = expressModule.__appMock
-
-    const healthCall = app.get.mock.calls.find(
-      (call: unknown[]) => call[0] === '/api/health',
-    )
-    expect(healthCall).toBeDefined()
-
-    if (!healthCall) {
-      return
-    }
-
-    const healthHandler = healthCall[1] as (
-      req: unknown,
-      res: { json: ReturnType<typeof vi.fn> },
-    ) => void
-
-    const res = {
-      json: vi.fn(),
-    }
-
-    healthHandler({}, res)
-
-    expect(res.json).toHaveBeenCalledWith({ status: 'ok' })
   })
 })

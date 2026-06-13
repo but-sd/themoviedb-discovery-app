@@ -3,6 +3,7 @@ import cors from 'cors'
 import express from 'express'
 import { registerApiSpec } from './api-spec'
 import { serviceEndpoints, type ServiceInfoResponse } from './api-schemas'
+import { registerHealthApi } from './health-api'
 import { registerMoviesApi } from './movies-api'
 import { registerTvApi } from './tv-api'
 
@@ -28,13 +29,9 @@ app.get('/', (_req, res) => {
   res.json(response)
 })
 
-// Health check endpoint
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok' })
-})
-
 // Register API routes from dedicated modules
 registerApiSpec(app)
+registerHealthApi(app)
 registerTvApi(app)
 registerMoviesApi(app)
 
