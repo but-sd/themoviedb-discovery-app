@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { type MovieItem } from '../../../back-end/api-schemas'
-import '../ItemCard/ItemCard.css'
+import '../shared/MediaCard.css'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w342'
 
