@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import MovieDetailCard from './MovieDetailCard'
-import { type MovieDetails } from '../../Types'
+import { type MovieDetails } from '../../../back-end/api-schemas'
 
 function createMovie(overrides: Partial<MovieDetails> = {}): MovieDetails {
   return {

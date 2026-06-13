@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import ItemCard from '../../components/ItemCard/ItemCard'
 import { fetchPopularMovies } from "../../services/movies-service"
-import { type Item } from "../../Types"
+import { type Item } from "../../../back-end/api-schemas"
 import './MovieListPage.css'
 
 /**

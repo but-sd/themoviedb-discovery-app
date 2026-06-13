@@ -29,7 +29,7 @@ Main frontend modules are in src/front-end:
 - pages - feature pages for movie and TV lists/details
 - components - shared and feature UI components
 - services - API service calls used by pages/components
-- Types.ts - frontend domain types
+- api-schemas.ts (from ../back-end) - shared frontend/backend domain types
 
 ## Related Backend Docs
 

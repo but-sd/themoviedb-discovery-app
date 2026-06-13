@@ -1,4 +1,4 @@
-import { type Item } from "../../Types"
+import { type Item } from "../../../back-end/api-schemas"
 import './ItemCard.css'
 
 // Base URL for fetching poster images from TMDb with a width of 342 pixels. This size is a good balance between quality and loading performance for item cards.

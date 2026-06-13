@@ -1,4 +1,4 @@
-import type { Item, TvShowDetails } from "../Types";
+import type { Item, TvShowDetails } from "../../back-end/api-schemas";
 import type { MediaListParams, MediaRequestParams } from "./moviesApi";
 
 

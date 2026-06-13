@@ -1,4 +1,4 @@
-import { type MovieDetails } from "../../Types"
+import { type MovieDetails } from "../../../back-end/api-schemas"
 import { DETAIL_IMAGE_BASE_URL, formatRuntime } from "../commons"
 import './MovieDetailCard.css'
 

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import ItemCard from './ItemCard'
-import { type Item } from '../../Types'
+import { type Item } from '../../../back-end/api-schemas'
 
 describe('ItemCard', () => {
   it('renders title, release year, and formatted rating', () => {

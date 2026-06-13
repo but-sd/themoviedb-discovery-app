@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import ItemCard from '../components/ItemCard/ItemCard'
-import { type Item } from "../Types"
+import { type Item } from "../../back-end/api-schemas"
 import './MovieListPage.css'
 import { fetchPopularTvShows } from '../services/tv-shows-service'
 

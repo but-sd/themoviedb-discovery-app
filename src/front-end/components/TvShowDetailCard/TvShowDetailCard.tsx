@@ -1,4 +1,4 @@
-import { type TvShowDetails } from '../../Types'
+import { type TvShowDetails } from '../../../back-end/api-schemas'
 import { DETAIL_IMAGE_BASE_URL, formatRuntime } from '../commons'
 import './TvShowDetailCard.css'
 

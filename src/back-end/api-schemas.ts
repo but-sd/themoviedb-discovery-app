@@ -107,6 +107,8 @@ export const TvShowDetailsSchema = ItemSchema.extend({
   first_air_date: z.string().optional(),
 })
 
+export type Item = z.infer<typeof ItemSchema>
+export type Genre = z.infer<typeof GenreSchema>
 export type ServiceInfoResponse = z.infer<typeof ServiceInfoResponseSchema>
 export type HealthResponse = z.infer<typeof HealthResponseSchema>
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>

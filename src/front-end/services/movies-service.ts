@@ -1,4 +1,4 @@
-import type { Item, MovieDetails } from "../Types";
+import type { Item, MovieDetails } from "../../back-end/api-schemas";
 import type { MediaListParams, MediaRequestParams } from "./moviesApi";
 
 export type MoviesResponse = {
