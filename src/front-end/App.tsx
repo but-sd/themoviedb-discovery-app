@@ -3,7 +3,7 @@ import NavBar from './components/NavBar/NavBar'
 import MovieDetailPage from './pages/MovieDetailPage/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage/MovieListPage'
 import TvDetailPage from './pages/TvDetailPage'
-import TvListPage from './pages/TvListPage'
+import TvListPage from './pages/TvListPage/TvListPage'
 
 function MovieDetailRoute() {
   const { movieId } = useParams<{ movieId: string }>()

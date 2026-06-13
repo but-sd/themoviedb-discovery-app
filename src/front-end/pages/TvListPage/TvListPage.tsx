@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { type TvItem } from '../../back-end/api-schemas'
-import TvItemCard from '../components/TvItemCard/TvItemCard'
-import { fetchPopularTvShows } from '../services/tv-shows-service'
-import './MovieListPage/MovieListPage.css'
+import { type TvItem } from '../../../back-end/api-schemas'
+import TvItemCard from '../../components/TvItemCard/TvItemCard'
+import { fetchPopularTvShows } from '../../services/tv-shows-service'
+import './TvListPage.css'
 
 export default function TvListPage() {
   const [items, setItems] = useState<TvItem[]>([])
@@ -53,8 +53,8 @@ export default function TvListPage() {
   }
 
   return (
-    <main className="movie-page">
-      <header className="movie-page-header">
+    <main className="tv-show-page">
+      <header className="tv-show-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Series populaires</h1>
         <p className="subtitle">
@@ -67,7 +67,7 @@ export default function TvListPage() {
       {isLoading && items.length === 0 ? (
         <p className="loading-state">Chargement des series...</p>
       ) : (
-        <section className="movie-grid" aria-live="polite">
+        <section className="tv-show-grid" aria-live="polite">
           {items.map((item) => (
             <TvItemCard key={item.id} show={item} />
           ))}
