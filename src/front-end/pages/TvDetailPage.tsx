@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import TvShowDetailCard from '../components/TvShowDetailCard/TvShowDetailCard'
 import { type TvShowDetails } from '../../back-end/api-schemas'
 import { fetchTvDetails } from '../services/tv-shows-service'
-import './MovieDetailPage.css'
+import './MovieDetailPage/MovieDetailPage.css'
 
 type TvDetailPageProps = Readonly<{
   tvId: string

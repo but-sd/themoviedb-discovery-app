@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { type TvItem } from '../../back-end/api-schemas'
 import TvItemCard from '../components/TvItemCard/TvItemCard'
 import { fetchPopularTvShows } from '../services/tv-shows-service'
-import './MovieListPage.css'
+import './MovieListPage/MovieListPage.css'
 
 export default function TvListPage() {
   const [items, setItems] = useState<TvItem[]>([])
