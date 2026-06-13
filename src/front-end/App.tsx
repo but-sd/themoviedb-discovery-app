@@ -1,34 +1,31 @@
+import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
+import NavBar from './components/NavBar/NavBar'
 import MovieDetailPage from './pages/MovieDetailPage/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage/MovieListPage'
 import TvDetailPage from './pages/TvDetailPage'
 import TvListPage from './pages/TvListPage'
 
-function normalizePathname(pathname: string): string {
-  const trimmedPath = pathname.replace(/\/+$/, '')
-  return trimmedPath === '' ? '/' : trimmedPath
+function MovieDetailRoute() {
+  const { movieId } = useParams<{ movieId: string }>()
+
+  if (!movieId) {
+    return <Navigate to="/movies" replace />
+  }
+
+  return <MovieDetailPage movieId={movieId} />
 }
 
-export default function App() {
-  const pathname = normalizePathname(globalThis.location.pathname)
-  const movieDetailMatch = /^\/movies\/(\d+)$/.exec(pathname)
-  const tvDetailMatch = /^\/tv\/(\d+)$/.exec(pathname)
+function TvDetailRoute() {
+  const { tvId } = useParams<{ tvId: string }>()
 
-  if (movieDetailMatch) {
-    return <MovieDetailPage movieId={movieDetailMatch[1]} />
+  if (!tvId) {
+    return <Navigate to="/tv" replace />
   }
 
-  if (tvDetailMatch) {
-    return <TvDetailPage tvId={tvDetailMatch[1]} />
-  }
+  return <TvDetailPage tvId={tvId} />
+}
 
-  if (pathname === '/' || pathname === '/movies') {
-    return <MovieListPage />
-  }
-
-  if (pathname === '/tv') {
-    return <TvListPage />
-  }
-
+function NotFoundPage() {
   return (
     <main className="movie-page">
       <header className="movie-page-header">
@@ -38,8 +35,25 @@ export default function App() {
       </header>
 
       <div className="actions">
-        <a href="/">Return to the movies</a>
+        <Link to="/movies">Return to the movies</Link>
       </div>
     </main>
+  )
+}
+
+export default function App() {
+  return (
+    <>
+      <NavBar />
+
+      <Routes>
+        <Route path="/" element={<Navigate to="/movies" replace />} />
+        <Route path="/movies" element={<MovieListPage />} />
+        <Route path="/movies/:movieId" element={<MovieDetailRoute />} />
+        <Route path="/tv" element={<TvListPage />} />
+        <Route path="/tv/:tvId" element={<TvDetailRoute />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </>
   )
 }

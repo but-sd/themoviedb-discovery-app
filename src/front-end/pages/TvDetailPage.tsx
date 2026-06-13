@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import TvShowDetailCard from '../components/TvShowDetailCard/TvShowDetailCard'
 import { type TvShowDetails } from '../../back-end/api-schemas'
-import { fetchTvDetails } from "../services/tv-shows-service"
+import { fetchTvDetails } from '../services/tv-shows-service'
 import './MovieDetailPage.css'
 
 type TvDetailPageProps = Readonly<{
@@ -36,9 +37,9 @@ export default function TvDetailPage({ tvId }: TvDetailPageProps) {
   return (
     <main className="movie-detail-page">
       <div className="movie-detail-shell">
-        <a className="back-link" href="/tv">
+        <Link className="back-link" to="/tv">
           ← Back to popular TV shows
-        </a>
+        </Link>
 
         {isLoading ? <p className="detail-status">Loading TV show details...</p> : null}
 

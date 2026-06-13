@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import ItemCard from './ItemCard'
 import { type Item } from '../../../back-end/api-schemas'
+import ItemCard from './ItemCard'
 
 describe('ItemCard', () => {
   it('renders title, release year, and formatted rating', () => {
@@ -13,7 +14,11 @@ describe('ItemCard', () => {
       poster_path: '/avatar.jpg',
     }
 
-    render(<ItemCard item={item} href="/movies/1" />)
+    render(
+      <MemoryRouter>
+        <ItemCard item={item} href="/movies/1" />
+      </MemoryRouter>,
+    )
 
     expect(screen.getByRole('heading', { name: 'Avatar' })).toBeTruthy()
     expect(screen.getByText('2009 · Rating 7.8')).toBeTruthy()
@@ -32,7 +37,11 @@ describe('ItemCard', () => {
       vote_average: 6,
     }
 
-    const { container } = render(<ItemCard item={item} href="/movies/2" />)
+    const { container } = render(
+      <MemoryRouter>
+        <ItemCard item={item} href="/movies/2" />
+      </MemoryRouter>,
+    )
 
     expect(screen.getByText('N/A · Rating 6.0')).toBeTruthy()
     const placeholder = container.querySelector('.movie-poster-placeholder')
