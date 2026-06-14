@@ -32,3 +32,6 @@ dist-ssr
 
 # coverage
 coverage
+
+*storybook.log
+storybook-static
