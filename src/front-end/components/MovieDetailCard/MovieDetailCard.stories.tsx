@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { type MovieDetails } from '../../../back-end/api-schemas'
 import MovieDetailCard from './MovieDetailCard'
 
+/**
+ * Storybook stories for the MovieDetailCard component.
+ */
+
+// Base movie data used for the stories
 const baseMovie: MovieDetails = {
   id: 27205,
   title: 'Inception',
@@ -19,6 +24,7 @@ const baseMovie: MovieDetails = {
   original_title: 'Inception',
 }
 
+// Storybook metadata for the MovieDetailCard component
 const meta = {
   title: 'Components/MovieDetailCard',
   component: MovieDetailCard,
@@ -31,8 +37,14 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
+/**
+ * Default story for the MovieDetailCard component.
+ */
 export const Default: Story = {}
 
+/**
+ * Story for the MovieDetailCard component with missing optional data.
+ */
 export const MissingOptionalData: Story = {
   args: {
     movie: {

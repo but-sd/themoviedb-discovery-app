@@ -20,6 +20,31 @@ For backend endpoint details, see the live docs at:
 
 - [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
 
+## Storybook
+
+Storybook is available for developing and validating UI components in isolation.
+
+From the repository root, start Storybook with:
+
+```bash
+npm run storybook
+```
+
+Default Storybook URL:
+
+- http://localhost:6006
+
+To generate a static Storybook build:
+
+```bash
+npm run build-storybook
+```
+
+Storybook config and stories in this project:
+
+- `.storybook` - Storybook configuration
+- `src/front-end/components/MovieDetailCard/MovieDetailCard.stories.tsx` - current story example
+
 ## Frontend Structure
 
 Main frontend modules are in src/front-end:
