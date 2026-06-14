@@ -19,7 +19,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/back-end/**/*.ts', 'src/front-end/**/*.{ts,tsx}'],
-      exclude: ['src/front-end/**/*.test.{ts,tsx}', 'src/front-end/main.tsx'],
+      exclude: ['src/front-end/**/*.test.{ts,tsx}', 'src/front-end/main.tsx', 'src/front-end/**/*.stories.{ts,tsx}'],
       reporter: ['text', 'html', 'json-summary'],
     },
   },
