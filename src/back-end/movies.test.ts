@@ -65,8 +65,9 @@ describe('registerMoviesApi', () => {
 
         registerMoviesApi(app)
 
-        expect(get).toHaveBeenCalledTimes(3)
+        expect(get).toHaveBeenCalledTimes(4)
         expect(get).toHaveBeenCalledWith('/api/movies/popular', expect.any(Function))
+          expect(get).toHaveBeenCalledWith('/api/movies/top-rated', expect.any(Function))
         expect(get).toHaveBeenCalledWith('/api/movies/genres', expect.any(Function))
         expect(get).toHaveBeenCalledWith('/api/movies/:id', expect.any(Function))
     })

@@ -4,6 +4,7 @@ export const serviceEndpoints = [
   '/api/health',
   '/api/movies/popular',
   '/api/movies/genres',
+  '/api/movies/top-rated',
   '/api/movies/:id',
   '/api/tv/popular',
   '/api/tv/:id',

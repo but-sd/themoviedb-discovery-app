@@ -1,0 +1,85 @@
+import { useEffect, useState } from 'react'
+import { type MovieItem } from '../../../back-end/api-schemas'
+import MovieItemCard from '../../components/MovieItemCard/MovieItemCard'
+import { fetchTopRatedMovies } from '../../services/movies-service'
+import '../MovieListPage/MovieListPage.css'
+
+export default function TopRatedMovieListPage() {
+  const [movies, setMovies] = useState<MovieItem[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
+
+  useEffect(() => {
+    const loadInitialPage = async () => {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        const results = await fetchTopRatedMovies({ language: 'fr-FR', region: 'FR', page: 1 })
+        setMovies(results)
+      } catch (loadError) {
+        const message =
+          loadError instanceof Error ? loadError.message : 'Could not load top rated movies.'
+        setError(message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    void loadInitialPage()
+  }, [])
+
+  const handleLoadMore = async () => {
+    const nextPage = page + 1
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const results = await fetchTopRatedMovies({
+        language: 'fr-FR',
+        region: 'FR',
+        page: nextPage,
+      })
+      setMovies((currentMovies) => [...currentMovies, ...results])
+      setPage(nextPage)
+    } catch (loadError) {
+      const message =
+        loadError instanceof Error ? loadError.message : 'Could not load more top rated movies.'
+      setError(message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <main className="movie-page">
+      <header className="movie-page-header">
+        <p className="eyebrow">The Movie DB Discovery</p>
+        <h1>Films les mieux notes</h1>
+        <p className="subtitle">
+          Les meilleurs films selon les notes TMDB en France, d&apos;apres les donnees de{' '}
+          <b>The Movie DB</b>.
+        </p>
+      </header>
+
+      {error ? <p className="error-banner">{error}</p> : null}
+
+      {isLoading && movies.length === 0 ? (
+        <p className="loading-state">Chargement des films...</p>
+      ) : (
+        <section className="movie-grid" aria-live="polite">
+          {movies.map((movie) => (
+            <MovieItemCard key={movie.id} movie={movie} />
+          ))}
+        </section>
+      )}
+
+      <div className="actions">
+        <button type="button" onClick={handleLoadMore} disabled={isLoading}>
+          {isLoading ? 'Chargement...' : 'Charger plus'}
+        </button>
+      </div>
+    </main>
+  )
+}

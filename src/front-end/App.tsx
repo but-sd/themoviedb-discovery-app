@@ -3,6 +3,7 @@ import NavBar from './components/NavBar/NavBar'
 import MovieDetailPage from './pages/MovieDetailPage/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage/MovieListPage'
 import MovieStatsPage from './pages/MovieStatsPage/MovieStatsPage'
+import TopRatedMovieListPage from './pages/TopRatedMovieListPage/TopRatedMovieListPage'
 import TvDetailPage from './pages/TvDetailPage/TvDetailPage'
 import TvListPage from './pages/TvListPage/TvListPage'
 
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/movies" replace />} />
         <Route path="/movies" element={<MovieListPage />} />
         <Route path="/movies/stats" element={<MovieStatsPage />} />
+        <Route path="/movies/top-rated" element={<TopRatedMovieListPage />} />
         <Route path="/movies/:movieId" element={<MovieDetailRoute />} />
         <Route path="/tv" element={<TvListPage />} />
         <Route path="/tv/:tvId" element={<TvDetailRoute />} />

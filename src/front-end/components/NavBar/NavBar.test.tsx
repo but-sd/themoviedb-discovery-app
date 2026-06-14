@@ -20,6 +20,9 @@ describe('NavBar', () => {
     expect(screen.getByRole('link', { name: 'Stats Films' }).getAttribute('href')).toBe(
       '/movies/stats',
     )
+    expect(screen.getByRole('link', { name: 'Top Rated' }).getAttribute('href')).toBe(
+      '/movies/top-rated',
+    )
     expect(screen.getByRole('link', { name: 'TV Shows' }).getAttribute('href')).toBe('/tv')
     expect(screen.getByRole('link', { name: 'API Docs' }).getAttribute('href')).toBe('/api/docs')
   })
@@ -62,5 +65,19 @@ describe('NavBar', () => {
     const statsLink = screen.getByRole('link', { name: 'Stats Films' })
 
     expect(statsLink.className).toContain('app-nav-link-active')
+  })
+
+  it('applies active class for top rated link when on /movies/top-rated route', () => {
+    render(
+      <MemoryRouter initialEntries={['/movies/top-rated']}>
+        <NavBar />
+      </MemoryRouter>,
+    )
+
+    const topRatedLink = screen.getByRole('link', { name: 'Top Rated' })
+    const moviesLink = screen.getByRole('link', { name: 'Movies' })
+
+    expect(topRatedLink.className).toContain('app-nav-link-active')
+    expect(moviesLink.className).not.toContain('app-nav-link-active')
   })
 })

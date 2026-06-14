@@ -168,9 +168,10 @@ describe('back-end index bootstrap', () => {
       openapi: '/openapi.json',
       endpoints: [
         '/api/health',
-        '/api/movies/popular',
-        '/api/movies/genres',
-        '/api/movies/:id',
+          '/api/movies/popular',
+          '/api/movies/genres',
+          '/api/movies/top-rated',
+          '/api/movies/:id',
         '/api/tv/popular',
         '/api/tv/:id',
       ],

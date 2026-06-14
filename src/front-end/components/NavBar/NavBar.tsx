@@ -9,6 +9,7 @@ export default function NavBar() {
 
         <div className="app-nav-links">
           <NavLink
+            end
             className={({ isActive }) =>
               `app-nav-link${isActive ? ' app-nav-link-active' : ''}`
             }
@@ -24,6 +25,15 @@ export default function NavBar() {
             to="/movies/stats"
           >
             Stats Films
+          </NavLink>
+
+          <NavLink
+            className={({ isActive }) =>
+              `app-nav-link${isActive ? ' app-nav-link-active' : ''}`
+            }
+            to="/movies/top-rated"
+          >
+            Top Rated
           </NavLink>
 
           <NavLink
