@@ -2,11 +2,12 @@ import { type ReactNode } from 'react'
 import { cleanup, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { type MovieItem } from '../../../back-end/api-schemas'
+import { type Genre, type MovieItem } from '../../../back-end/api-schemas'
 import MovieStatsPage from './MovieStatsPage'
-import { fetchPopularMoviesPages } from '../../services/movies-service'
+import { fetchMovieGenres, fetchPopularMoviesPages } from '../../services/movies-service'
 
 vi.mock('../../services/movies-service', () => ({
+  fetchMovieGenres: vi.fn(),
   fetchPopularMoviesPages: vi.fn(),
 }))
 
@@ -40,6 +41,12 @@ function createMovieItem(overrides: Partial<MovieItem> = {}): MovieItem {
   }
 }
 
+const genres: Genre[] = [
+  { id: 12, name: 'Adventure' },
+  { id: 18, name: 'Drama' },
+  { id: 28, name: 'Action' },
+]
+
 describe('MovieStatsPage', () => {
   afterEach(() => {
     cleanup()
@@ -52,6 +59,7 @@ describe('MovieStatsPage', () => {
       createMovieItem({ id: 2, genre_ids: [28], vote_average: 7.3, release_date: '2023-02-05' }),
       createMovieItem({ id: 3, genre_ids: [18], vote_average: 6.8, release_date: '2022-06-15' }),
     ])
+    vi.mocked(fetchMovieGenres).mockResolvedValue(genres)
 
     render(
       <MemoryRouter>
@@ -66,6 +74,7 @@ describe('MovieStatsPage', () => {
       pages: 3,
       region: 'FR',
     })
+    expect(fetchMovieGenres).toHaveBeenCalledWith({ language: 'fr-FR' })
     const kpiSection = screen.getByRole('region', { name: 'Indicateurs films' })
 
     expect(within(kpiSection).getByText('Films analyses')).toBeTruthy()
@@ -76,12 +85,13 @@ describe('MovieStatsPage', () => {
     expect(screen.getByTestId('chart-shell')).toBeTruthy()
     expect(screen.getByRole('columnheader', { name: 'Genre' })).toBeTruthy()
     expect(screen.getByRole('rowheader', { name: 'Action' })).toBeTruthy()
-    expect(screen.getByRole('rowheader', { name: 'Aventure' })).toBeTruthy()
-    expect(screen.getByRole('rowheader', { name: 'Drame' })).toBeTruthy()
+    expect(screen.getByRole('rowheader', { name: 'Adventure' })).toBeTruthy()
+    expect(screen.getByRole('rowheader', { name: 'Drama' })).toBeTruthy()
   })
 
   it('renders the service error when loading fails', async () => {
     vi.mocked(fetchPopularMoviesPages).mockRejectedValue(new Error('Stats API failed'))
+    vi.mocked(fetchMovieGenres).mockResolvedValue(genres)
 
     render(
       <MemoryRouter>

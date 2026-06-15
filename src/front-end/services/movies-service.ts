@@ -1,5 +1,7 @@
 import type {
+  Genre,
   MovieDetails,
+  MovieGenresResponse,
   MovieItem,
   MoviePopularResponse,
 } from '../../back-end/api-schemas'
@@ -58,6 +60,21 @@ export async function fetchPopularMoviesPages(
     seenMovieIds.add(movie.id)
     return true
   })
+}
+
+export async function fetchMovieGenres(params?: MediaRequestParams): Promise<Genre[]> {
+  const searchParams = new URLSearchParams({
+    language: params?.language ?? 'fr-FR',
+  })
+  const response = await fetch(`/api/movies/genres?${searchParams.toString()}`)
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || `Request failed with status ${response.status}`)
+  }
+
+  const data = (await response.json()) as MovieGenresResponse
+  return data.genres ?? []
 }
 
 export async function fetchMovieDetails(

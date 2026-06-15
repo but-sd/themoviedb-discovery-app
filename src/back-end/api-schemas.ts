@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const serviceEndpoints = [
   '/api/health',
   '/api/movies/popular',
+  '/api/movies/genres',
   '/api/movies/:id',
   '/api/tv/popular',
   '/api/tv/:id',
@@ -80,6 +81,10 @@ export const MoviePopularResponseSchema = z.object({
   total_results: z.number(),
 })
 
+export const MovieGenresResponseSchema = z.object({
+  genres: z.array(GenreSchema),
+})
+
 export const TvPopularResponseSchema = z.object({
   page: z.number(),
   results: z.array(TvItemSchema),
@@ -115,6 +120,7 @@ export type ServiceInfoResponse = z.infer<typeof ServiceInfoResponseSchema>
 export type HealthResponse = z.infer<typeof HealthResponseSchema>
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>
 export type MoviePopularResponse = z.infer<typeof MoviePopularResponseSchema>
+export type MovieGenresResponse = z.infer<typeof MovieGenresResponseSchema>
 export type TvPopularResponse = z.infer<typeof TvPopularResponseSchema>
 export type MovieDetails = z.infer<typeof MovieDetailsSchema>
 export type TvShowDetails = z.infer<typeof TvShowDetailsSchema>

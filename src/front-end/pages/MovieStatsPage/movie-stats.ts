@@ -1,26 +1,4 @@
-import { type MovieItem } from '../../../back-end/api-schemas'
-
-export const TMDB_MOVIE_GENRE_NAMES: Record<number, string> = {
-  12: 'Aventure',
-  14: 'Fantastique',
-  16: 'Animation',
-  18: 'Drame',
-  27: 'Horreur',
-  28: 'Action',
-  35: 'Comedie',
-  36: 'Histoire',
-  37: 'Western',
-  53: 'Thriller',
-  80: 'Crime',
-  99: 'Documentaire',
-  878: 'Science-fiction',
-  9648: 'Mystere',
-  10402: 'Musique',
-  10749: 'Romance',
-  10751: 'Famille',
-  10752: 'Guerre',
-  10770: 'Telefilm',
-}
+import { type Genre, type MovieItem } from '../../../back-end/api-schemas'
 
 export type GenreStat = {
   averageRating: number
@@ -43,10 +21,6 @@ function toFixedNumber(value: number, digits = 1): number {
   return Number(value.toFixed(digits))
 }
 
-function getGenreName(genreId: number): string {
-  return TMDB_MOVIE_GENRE_NAMES[genreId] ?? `Genre ${genreId}`
-}
-
 function getReleaseYear(releaseDate: string | undefined): number | null {
   if (!releaseDate || !/^\d{4}/.test(releaseDate)) {
     return null
@@ -55,7 +29,10 @@ function getReleaseYear(releaseDate: string | undefined): number | null {
   return Number(releaseDate.slice(0, 4))
 }
 
-export function buildMovieStats(movies: readonly MovieItem[]): MovieStatsSummary {
+export function buildMovieStats(
+  movies: readonly MovieItem[],
+  genres: readonly Genre[] = [],
+): MovieStatsSummary {
   if (movies.length === 0) {
     return {
       averageRating: 0,
@@ -67,6 +44,7 @@ export function buildMovieStats(movies: readonly MovieItem[]): MovieStatsSummary
     }
   }
 
+  const genreNamesById = new Map(genres.map((genre) => [genre.id, genre.name]))
   const genreStats = new Map<number, { movieCount: number; ratingTotal: number }>()
   let latestReleaseYear: number | null = null
   let ratingTotal = 0
@@ -92,7 +70,7 @@ export function buildMovieStats(movies: readonly MovieItem[]): MovieStatsSummary
       averageRating: toFixedNumber(stat.ratingTotal / stat.movieCount),
       genreId,
       movieCount: stat.movieCount,
-      name: getGenreName(genreId),
+      name: genreNamesById.get(genreId) ?? `Genre ${genreId}`,
       share: toFixedNumber((stat.movieCount / movies.length) * 100),
     }))
     .sort((left, right) => {

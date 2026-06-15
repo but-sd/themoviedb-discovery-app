@@ -6,6 +6,7 @@ import {
   ErrorResponseSchema,
   HealthResponseSchema,
   MovieDetailsSchema,
+  MovieGenresResponseSchema,
   MoviePopularResponseSchema,
   ServiceInfoResponseSchema,
   TvPopularResponseSchema,
@@ -18,6 +19,7 @@ const ServiceInfoResponse = ServiceInfoResponseSchema.meta({ id: 'ServiceInfoRes
 const HealthResponse = HealthResponseSchema.meta({ id: 'HealthResponse' })
 const ErrorResponse = ErrorResponseSchema.meta({ id: 'ErrorResponse' })
 const MoviePopularResponse = MoviePopularResponseSchema.meta({ id: 'MoviePopularResponse' })
+const MovieGenresResponse = MovieGenresResponseSchema.meta({ id: 'MovieGenresResponse' })
 const TvPopularResponse = TvPopularResponseSchema.meta({ id: 'TvPopularResponse' })
 const MovieDetails = MovieDetailsSchema.meta({ id: 'MovieDetails' })
 const TvShowDetails = TvShowDetailsSchema.meta({ id: 'TvShowDetails' })
@@ -102,6 +104,43 @@ registry.registerPath({
       content: {
         'application/json': {
           schema: MoviePopularResponse,
+        },
+      },
+    },
+    500: {
+      description: 'Server error',
+      content: {
+        'application/json': {
+          schema: ErrorResponse,
+        },
+      },
+    },
+    default: {
+      description: 'TMDB upstream error',
+      content: {
+        'application/json': {
+          schema: ErrorResponse,
+        },
+      },
+    },
+  },
+})
+
+registry.registerPath({
+  method: 'get',
+  path: '/api/movies/genres',
+  tags: ['Movies'],
+  summary: 'Get movie genres',
+  operationId: 'getMovieGenres',
+  request: {
+    query: detailsQuerySchema,
+  },
+  responses: {
+    200: {
+      description: 'Movie genres from TMDB',
+      content: {
+        'application/json': {
+          schema: MovieGenresResponse,
         },
       },
     },

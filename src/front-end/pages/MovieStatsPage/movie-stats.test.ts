@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { type MovieItem } from '../../../back-end/api-schemas'
+import { type Genre, type MovieItem } from '../../../back-end/api-schemas'
 import { buildMovieStats } from './movie-stats'
 
 function createMovieItem(overrides: Partial<MovieItem> = {}): MovieItem {
@@ -35,11 +35,17 @@ describe('buildMovieStats', () => {
   })
 
   it('aggregates genre distribution, rating averages, and latest release year', () => {
+    const genres: Genre[] = [
+      { id: 12, name: 'Adventure' },
+      { id: 18, name: 'Drama' },
+      { id: 28, name: 'Action' },
+      { id: 878, name: 'Science Fiction' },
+    ]
     const summary = buildMovieStats([
       createMovieItem({ id: 1, genre_ids: [28, 12], release_date: '2024-01-01', vote_average: 8.2 }),
       createMovieItem({ id: 2, genre_ids: [28, 878], release_date: '2023-05-10', vote_average: 7.4 }),
       createMovieItem({ id: 3, genre_ids: [18], release_date: '2021-02-15', vote_average: 6.9 }),
-    ])
+    ], genres)
 
     expect(summary.totalMovies).toBe(3)
     expect(summary.totalGenres).toBe(4)
@@ -64,23 +70,29 @@ describe('buildMovieStats', () => {
         averageRating: 8.2,
         genreId: 12,
         movieCount: 1,
-        name: 'Aventure',
+        name: 'Adventure',
         share: 33.3,
       },
       {
         averageRating: 6.9,
         genreId: 18,
         movieCount: 1,
-        name: 'Drame',
+        name: 'Drama',
         share: 33.3,
       },
       {
         averageRating: 7.4,
         genreId: 878,
         movieCount: 1,
-        name: 'Science-fiction',
+        name: 'Science Fiction',
         share: 33.3,
       },
     ])
+  })
+
+  it('falls back to a generated label when a genre is missing from the API payload', () => {
+    const summary = buildMovieStats([createMovieItem({ genre_ids: [99999] })], [])
+
+    expect(summary.genreBreakdown[0]?.name).toBe('Genre 99999')
   })
 })

@@ -73,6 +73,7 @@ describe('registerApiSpec', () => {
     expect(schemas).toBeDefined()
     expect(paths?.['/']).toBeDefined()
     expect(paths?.['/api/movies/popular']).toBeDefined()
+    expect(paths?.['/api/movies/genres']).toBeDefined()
     expect(paths?.['/api/tv/{id}']).toBeDefined()
     expect(schemas?.ServiceInfoResponse).toBeDefined()
   })

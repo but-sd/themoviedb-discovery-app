@@ -8,14 +8,15 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { type MovieItem } from '../../../back-end/api-schemas'
-import { fetchPopularMoviesPages } from '../../services/movies-service'
+import { type Genre, type MovieItem } from '../../../back-end/api-schemas'
+import { fetchMovieGenres, fetchPopularMoviesPages } from '../../services/movies-service'
 import { buildMovieStats } from './movie-stats'
 import './MovieStatsPage.css'
 
 const STATS_PAGE_COUNT = 3
 
 export default function MovieStatsPage() {
+  const [genres, setGenres] = useState<Genre[]>([])
   const [movies, setMovies] = useState<MovieItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -26,12 +27,16 @@ export default function MovieStatsPage() {
       setError(null)
 
       try {
-        const results = await fetchPopularMoviesPages({
-          language: 'fr-FR',
-          region: 'FR',
-          pages: STATS_PAGE_COUNT,
-        })
-        setMovies(results)
+        const [movieResults, genreResults] = await Promise.all([
+          fetchPopularMoviesPages({
+            language: 'fr-FR',
+            region: 'FR',
+            pages: STATS_PAGE_COUNT,
+          }),
+          fetchMovieGenres({ language: 'fr-FR' }),
+        ])
+        setMovies(movieResults)
+        setGenres(genreResults)
       } catch (loadError) {
         const message =
           loadError instanceof Error ? loadError.message : 'Could not load movie statistics.'
@@ -44,7 +49,7 @@ export default function MovieStatsPage() {
     void loadMovieStats()
   }, [])
 
-  const stats = useMemo(() => buildMovieStats(movies), [movies])
+  const stats = useMemo(() => buildMovieStats(movies, genres), [genres, movies])
   const chartData = stats.genreBreakdown.slice(0, 8)
 
   return (

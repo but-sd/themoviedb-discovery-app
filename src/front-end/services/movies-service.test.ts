@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fetchMovieDetails, fetchPopularMovies, fetchPopularMoviesPages } from './movies-service'
+import { fetchMovieDetails, fetchMovieGenres, fetchPopularMovies, fetchPopularMoviesPages } from './movies-service'
 
 describe('movies-service', () => {
   afterEach(() => {
@@ -87,6 +87,33 @@ describe('movies-service', () => {
       { id: 2, title: 'Titanic' },
       { id: 3, title: 'Alien' },
     ])
+  })
+
+  it('fetchMovieGenres uses default query params and returns genres', async () => {
+    const genres = [{ id: 28, name: 'Action' }]
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ genres }),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const data = await fetchMovieGenres()
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/movies/genres?language=fr-FR')
+    expect(data).toEqual(genres)
+  })
+
+  it('fetchMovieGenres throws status fallback when error text is empty', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 502,
+        text: vi.fn().mockResolvedValue(''),
+      }),
+    )
+
+    await expect(fetchMovieGenres()).rejects.toThrow('Request failed with status 502')
   })
 
   it('fetchMovieDetails calls encoded endpoint and returns payload', async () => {
