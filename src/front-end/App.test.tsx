@@ -10,6 +10,10 @@ vi.mock('./pages/MovieListPage/MovieListPage', () => ({
   default: () => <div>Mock Movie List Page</div>,
 }))
 
+vi.mock('./pages/MovieStatsPage/MovieStatsPage', () => ({
+  default: () => <div>Mock Movie Stats Page</div>,
+}))
+
 vi.mock('./pages/TvListPage/TvListPage', () => ({
   default: () => <div>Mock TV List Page</div>,
 }))
@@ -58,6 +62,16 @@ describe('App', () => {
     )
 
     expect(await screen.findByText('Mock Movie Detail Page: 42')).toBeTruthy()
+  })
+
+  it('renders movie stats route', async () => {
+    render(
+      <MemoryRouter initialEntries={['/movies/stats']}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(await screen.findByText('Mock Movie Stats Page')).toBeTruthy()
   })
 
   it('renders tv list route', async () => {

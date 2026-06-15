@@ -2,6 +2,7 @@ import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import NavBar from './components/NavBar/NavBar'
 import MovieDetailPage from './pages/MovieDetailPage/MovieDetailPage'
 import MovieListPage from './pages/MovieListPage/MovieListPage'
+import MovieStatsPage from './pages/MovieStatsPage/MovieStatsPage'
 import TvDetailPage from './pages/TvDetailPage/TvDetailPage'
 import TvListPage from './pages/TvListPage/TvListPage'
 
@@ -49,6 +50,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/movies" replace />} />
         <Route path="/movies" element={<MovieListPage />} />
+        <Route path="/movies/stats" element={<MovieStatsPage />} />
         <Route path="/movies/:movieId" element={<MovieDetailRoute />} />
         <Route path="/tv" element={<TvListPage />} />
         <Route path="/tv/:tvId" element={<TvDetailRoute />} />

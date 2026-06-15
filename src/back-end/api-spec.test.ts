@@ -57,6 +57,8 @@ describe('registerApiSpec', () => {
   it('returns the OpenAPI document from /openapi.json handler', () => {
     const { app, routes } = createMockApp()
     registerApiSpec(app)
+    const paths = OPENAPI_SPEC.paths
+    const schemas = OPENAPI_SPEC.components?.schemas
 
     const handler = routes.get('/openapi.json')
     const res = {
@@ -67,9 +69,11 @@ describe('registerApiSpec', () => {
 
     expect(res.json).toHaveBeenCalledWith(OPENAPI_SPEC)
     expect(OPENAPI_SPEC.openapi).toBe('3.1.0')
-    expect(OPENAPI_SPEC.paths['/']).toBeDefined()
-    expect(OPENAPI_SPEC.paths['/api/movies/popular']).toBeDefined()
-    expect(OPENAPI_SPEC.paths['/api/tv/{id}']).toBeDefined()
-    expect(OPENAPI_SPEC.components.schemas.ServiceInfoResponse).toBeDefined()
+    expect(paths).toBeDefined()
+    expect(schemas).toBeDefined()
+    expect(paths?.['/']).toBeDefined()
+    expect(paths?.['/api/movies/popular']).toBeDefined()
+    expect(paths?.['/api/tv/{id}']).toBeDefined()
+    expect(schemas?.ServiceInfoResponse).toBeDefined()
   })
 })

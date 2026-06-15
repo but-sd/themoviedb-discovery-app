@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fetchMovieDetails, fetchPopularMovies } from './movies-service'
+import { fetchMovieDetails, fetchPopularMovies, fetchPopularMoviesPages } from './movies-service'
 
 describe('movies-service', () => {
   afterEach(() => {
@@ -58,6 +58,35 @@ describe('movies-service', () => {
     )
 
     await expect(fetchPopularMovies()).rejects.toThrow('Request failed with status 503')
+  })
+
+  it('fetchPopularMoviesPages requests multiple pages and de-duplicates results', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ results: [{ id: 1, title: 'Avatar' }] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ results: [{ id: 1, title: 'Avatar' }, { id: 2, title: 'Titanic' }] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ results: [{ id: 3, title: 'Alien' }] }),
+      })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const data = await fetchPopularMoviesPages({ language: 'fr-FR', region: 'FR', pages: 3 })
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/movies/popular?language=fr-FR&region=FR&page=1')
+    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/movies/popular?language=fr-FR&region=FR&page=2')
+    expect(fetchMock).toHaveBeenNthCalledWith(3, '/api/movies/popular?language=fr-FR&region=FR&page=3')
+    expect(data).toEqual([
+      { id: 1, title: 'Avatar' },
+      { id: 2, title: 'Titanic' },
+      { id: 3, title: 'Alien' },
+    ])
   })
 
   it('fetchMovieDetails calls encoded endpoint and returns payload', async () => {
