@@ -65,8 +65,9 @@ describe('registerMoviesApi', () => {
 
         registerMoviesApi(app)
 
-        expect(get).toHaveBeenCalledTimes(2)
+        expect(get).toHaveBeenCalledTimes(3)
         expect(get).toHaveBeenCalledWith('/api/movies/popular', expect.any(Function))
+        expect(get).toHaveBeenCalledWith('/api/movies/genres', expect.any(Function))
         expect(get).toHaveBeenCalledWith('/api/movies/:id', expect.any(Function))
     })
 
@@ -188,6 +189,77 @@ describe('registerMoviesApi', () => {
 
             expect(res.status).toHaveBeenCalledWith(500)
             expect(res.json).toHaveBeenCalledWith({ error: 'Unknown server error' })
+        })
+    })
+
+    describe('GET /api/movies/genres', () => {
+        it('returns early when API key is missing', async () => {
+            const { app, routes } = createMockApp()
+            registerMoviesApi(app)
+
+            vi.mocked(getRequiredTmdbApiKey).mockReturnValue(null)
+
+            const handler = routes.get('/api/movies/genres')
+            const res = createMockResponse()
+
+            await handler?.({ query: {}, params: { id: '' } }, res)
+
+            expect(getRequiredTmdbApiKey).toHaveBeenCalledWith(res)
+            expect(fetch).not.toHaveBeenCalled()
+        })
+
+        it('builds genres URL, fetches, and returns JSON on success', async () => {
+            const { app, routes } = createMockApp()
+            registerMoviesApi(app)
+
+            vi.mocked(getRequiredTmdbApiKey).mockReturnValue('api key')
+            vi.mocked(getSingleQueryParam).mockReturnValueOnce('fr FR')
+
+            const tmdbPayload = { genres: [{ id: 28, name: 'Action' }] }
+            fetchMock.mockResolvedValue({
+                ok: true,
+                json: vi.fn().mockResolvedValue(tmdbPayload),
+            })
+
+            const handler = routes.get('/api/movies/genres')
+            const req = { query: { language: 'x' }, params: { id: '' } }
+            const res = createMockResponse()
+
+            await handler?.(req, res)
+
+            const expectedUrl =
+                `${TMDB_API_BASE_URL}/3/genre/movie/list?` +
+                `api_key=${encodeURIComponent('api key')}` +
+                `&language=${encodeURIComponent('fr FR')}`
+
+            expect(fetch).toHaveBeenCalledWith(expectedUrl)
+            expect(res.json).toHaveBeenCalledWith(tmdbPayload)
+            expect(res.status).not.toHaveBeenCalled()
+        })
+
+        it('returns TMDB status and details when genre request is non-ok', async () => {
+            const { app, routes } = createMockApp()
+            registerMoviesApi(app)
+
+            vi.mocked(getRequiredTmdbApiKey).mockReturnValue('tmdb-key')
+            vi.mocked(getSingleQueryParam).mockReturnValueOnce('fr-FR')
+
+            fetchMock.mockResolvedValue({
+                ok: false,
+                status: 429,
+                text: vi.fn().mockResolvedValue('Too Many Requests'),
+            })
+
+            const handler = routes.get('/api/movies/genres')
+            const res = createMockResponse()
+
+            await handler?.({ query: {}, params: { id: '' } }, res)
+
+            expect(res.status).toHaveBeenCalledWith(429)
+            expect(res.json).toHaveBeenCalledWith({
+                error: 'TMDB request failed with status 429',
+                details: 'Too Many Requests',
+            })
         })
     })
 

@@ -21,6 +21,15 @@ export default function NavBar() {
             className={({ isActive }) =>
               `app-nav-link${isActive ? ' app-nav-link-active' : ''}`
             }
+            to="/movies/stats"
+          >
+            Stats Films
+          </NavLink>
+
+          <NavLink
+            className={({ isActive }) =>
+              `app-nav-link${isActive ? ' app-nav-link-active' : ''}`
+            }
             to="/tv"
           >
             TV Shows

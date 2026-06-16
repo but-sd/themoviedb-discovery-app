@@ -17,6 +17,9 @@ describe('NavBar', () => {
 
     expect(screen.getByText('TMDB Discovery')).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Movies' }).getAttribute('href')).toBe('/movies')
+    expect(screen.getByRole('link', { name: 'Stats Films' }).getAttribute('href')).toBe(
+      '/movies/stats',
+    )
     expect(screen.getByRole('link', { name: 'TV Shows' }).getAttribute('href')).toBe('/tv')
     expect(screen.getByRole('link', { name: 'API Docs' }).getAttribute('href')).toBe('/api/docs')
   })
@@ -47,5 +50,17 @@ describe('NavBar', () => {
 
     expect(tvShowsLink.className).toContain('app-nav-link-active')
     expect(moviesLink.className).not.toContain('app-nav-link-active')
+  })
+
+  it('applies active class for stats link when on /movies/stats route', () => {
+    render(
+      <MemoryRouter initialEntries={['/movies/stats']}>
+        <NavBar />
+      </MemoryRouter>,
+    )
+
+    const statsLink = screen.getByRole('link', { name: 'Stats Films' })
+
+    expect(statsLink.className).toContain('app-nav-link-active')
   })
 })

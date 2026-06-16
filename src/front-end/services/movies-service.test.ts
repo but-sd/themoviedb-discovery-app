@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fetchMovieDetails, fetchPopularMovies } from './movies-service'
+import { fetchMovieDetails, fetchMovieGenres, fetchPopularMovies, fetchPopularMoviesPages } from './movies-service'
 
 describe('movies-service', () => {
   afterEach(() => {
@@ -58,6 +58,62 @@ describe('movies-service', () => {
     )
 
     await expect(fetchPopularMovies()).rejects.toThrow('Request failed with status 503')
+  })
+
+  it('fetchPopularMoviesPages requests multiple pages and de-duplicates results', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ results: [{ id: 1, title: 'Avatar' }] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ results: [{ id: 1, title: 'Avatar' }, { id: 2, title: 'Titanic' }] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ results: [{ id: 3, title: 'Alien' }] }),
+      })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const data = await fetchPopularMoviesPages({ language: 'fr-FR', region: 'FR', pages: 3 })
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/movies/popular?language=fr-FR&region=FR&page=1')
+    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/movies/popular?language=fr-FR&region=FR&page=2')
+    expect(fetchMock).toHaveBeenNthCalledWith(3, '/api/movies/popular?language=fr-FR&region=FR&page=3')
+    expect(data).toEqual([
+      { id: 1, title: 'Avatar' },
+      { id: 2, title: 'Titanic' },
+      { id: 3, title: 'Alien' },
+    ])
+  })
+
+  it('fetchMovieGenres uses default query params and returns genres', async () => {
+    const genres = [{ id: 28, name: 'Action' }]
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ genres }),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const data = await fetchMovieGenres()
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/movies/genres?language=fr-FR')
+    expect(data).toEqual(genres)
+  })
+
+  it('fetchMovieGenres throws status fallback when error text is empty', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 502,
+        text: vi.fn().mockResolvedValue(''),
+      }),
+    )
+
+    await expect(fetchMovieGenres()).rejects.toThrow('Request failed with status 502')
   })
 
   it('fetchMovieDetails calls encoded endpoint and returns payload', async () => {
