@@ -20,7 +20,7 @@ export default function TopRatedMovieListPage() {
         setMovies(results)
       } catch (loadError) {
         const message =
-          loadError instanceof Error ? loadError.message : 'Could not load top rated movies.'
+          loadError instanceof Error ? loadError.message : 'Impossible de charger les films les mieux notés.'
         setError(message)
       } finally {
         setIsLoading(false)
@@ -45,7 +45,7 @@ export default function TopRatedMovieListPage() {
       setPage(nextPage)
     } catch (loadError) {
       const message =
-        loadError instanceof Error ? loadError.message : 'Could not load more top rated movies.'
+        loadError instanceof Error ? loadError.message : 'Impossible de charger plus de films les mieux notés.'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -56,9 +56,9 @@ export default function TopRatedMovieListPage() {
     <main className="movie-page">
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
-        <h1>Films les mieux notes</h1>
+        <h1>Films les mieux notés</h1>
         <p className="subtitle">
-          Les meilleurs films selon les notes TMDB en France, d&apos;apres les donnees de{' '}
+          Les meilleurs films selon les notes TMDB en France, d&apos;après les données de{' '}
           <b>The Movie DB</b>.
         </p>
       </header>

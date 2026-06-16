@@ -32,12 +32,12 @@ function NotFoundPage() {
     <main className="movie-page">
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
-        <h1>Page Not Found</h1>
-        <p className="subtitle">The requested movie or TV page does not exist.</p>
+        <h1>Page introuvable</h1>
+        <p className="subtitle">La page film ou série demandée n'existe pas.</p>
       </header>
 
       <div className="actions">
-        <Link to="/movies">Return to the movies</Link>
+        <Link to="/movies">Retour vers les films</Link>
       </div>
     </main>
   )

@@ -16,21 +16,21 @@ export default function TvShowDetailCard({ show }: TvShowDetailCardProps) {
         <img
           className="tv-detail-hero"
           src={`${DETAIL_IMAGE_BASE_URL}${heroImage}`}
-          alt={`Artwork for ${show.name}`}
+          alt={`Visuel de ${show.name}`}
         />
       ) : (
         <div className="tv-detail-hero tv-detail-hero-placeholder" aria-hidden="true" />
       )}
 
       <div className="tv-detail-copy">
-        <p className="tv-detail-kicker">TV detail</p>
+        <p className="tv-detail-kicker">Détails de la série</p>
         <h1>{show.name}</h1>
         {show.tagline ? <h2 className="tv-detail-tagline">{show.tagline}</h2> : null}
 
         <div className="tv-detail-meta">
           <span>{releaseYear}</span>
           <span>{formatRuntime(show.episode_run_time?.[0] ?? 0)}</span>
-          <span>Rating {show.vote_average.toFixed(1)}</span>
+          <span>Note {show.vote_average.toFixed(1)}</span>
         </div>
 
         {show.genres && show.genres.length > 0 ? (
@@ -42,13 +42,13 @@ export default function TvShowDetailCard({ show }: TvShowDetailCardProps) {
         ) : null}
 
         <section className="tv-detail-section">
-          <h2>Overview</h2>
-          <p>{show.overview || 'No synopsis is available for this show yet.'}</p>
+          <h2>Synopsis</h2>
+          <p>{show.overview || "Aucun synopsis n'est disponible pour cette série pour le moment."}</p>
         </section>
 
         {show.original_name && show.original_name !== show.name ? (
           <section className="tv-detail-section">
-            <h2>Original name</h2>
+            <h2>Nom original</h2>
             <p>{show.original_name}</p>
           </section>
         ) : null}

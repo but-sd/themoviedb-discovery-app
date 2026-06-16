@@ -25,7 +25,7 @@ export default function NavBar() {
   }
 
   return (
-    <nav className="app-nav" aria-label="Main navigation">
+    <nav className="app-nav" aria-label="Navigation principale">
       <div className="app-nav-shell">
         <p className="app-nav-brand">TMDB Discovery</p>
 
@@ -41,10 +41,10 @@ export default function NavBar() {
                 isMoviesMenuOpen ? ' app-nav-link-active' : ''
               }`}
             >
-              Movies
+              Films
             </summary>
 
-            <div className="app-nav-submenu" aria-label="Movies submenu">
+            <div className="app-nav-submenu" aria-label="Sous-menu films">
               <NavLink
                 end
                 className={({ isActive }) =>
@@ -53,7 +53,7 @@ export default function NavBar() {
                 onClick={closeMoviesMenu}
                 to="/movies"
               >
-                Popular
+                Populaires
               </NavLink>
 
               <NavLink
@@ -63,7 +63,7 @@ export default function NavBar() {
                 onClick={closeMoviesMenu}
                 to="/movies/stats"
               >
-                Stats Films
+                Statistiques
               </NavLink>
 
               <NavLink
@@ -73,7 +73,7 @@ export default function NavBar() {
                 onClick={closeMoviesMenu}
                 to="/movies/top-rated"
               >
-                Top Rated
+                Mieux notés
               </NavLink>
             </div>
           </details>
@@ -85,11 +85,11 @@ export default function NavBar() {
             onClick={resetMoviesMenuState}
             to="/tv"
           >
-            TV Shows
+            Séries TV
           </NavLink>
 
           <a className="app-nav-link" href="/api/docs" onClick={resetMoviesMenuState}>
-            API Docs
+            Documentation API
           </a>
         </div>
       </div>

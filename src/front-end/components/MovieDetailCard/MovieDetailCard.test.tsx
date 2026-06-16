@@ -28,7 +28,7 @@ describe('MovieDetailCard', () => {
 
     const { container } = render(<MovieDetailCard movie={movie} />)
 
-    const hero = screen.getByRole('img', { name: 'Artwork for Inception' })
+    const hero = screen.getByRole('img', { name: 'Visuel de Inception' })
     expect(hero).toBeTruthy()
     expect(hero.getAttribute('src')).toContain('/preferred-backdrop.jpg')
 
@@ -54,7 +54,7 @@ describe('MovieDetailCard', () => {
     expect(placeholder).toBeTruthy()
 
     expect(screen.getByText('N/A')).toBeTruthy()
-    expect(screen.getByText('Runtime unavailable')).toBeTruthy()
+    expect(screen.getByText('Durée indisponible')).toBeTruthy()
     expect(screen.getByText('Note 7.0')).toBeTruthy()
     expect(
       screen.getByText("Aucun synopsis n'est disponible pour ce titre pour le moment.")

@@ -24,7 +24,7 @@ export default function TvDetailPage({ tvId }: TvDetailPageProps) {
         setShow(result)
       } catch (loadError) {
         const message =
-          loadError instanceof Error ? loadError.message : 'Could not load TV show details.'
+          loadError instanceof Error ? loadError.message : 'Impossible de charger les détails de la série.'
         setError(message)
       } finally {
         setIsLoading(false)
@@ -38,10 +38,10 @@ export default function TvDetailPage({ tvId }: TvDetailPageProps) {
     <main className="tv-show-detail-page">
       <div className="tv-show-detail-shell">
         <Link className="back-link" to="/tv">
-          ← Back to popular TV shows
+          ← Retour vers les séries populaires
         </Link>
 
-        {isLoading ? <p className="detail-status">Loading TV show details...</p> : null}
+        {isLoading ? <p className="detail-status">Chargement des détails de la série...</p> : null}
 
         {error ? <p className="detail-status detail-error">{error}</p> : null}
 

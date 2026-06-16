@@ -115,8 +115,8 @@ describe('App', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByRole('heading', { name: 'Page Not Found' })).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Return to the movies' }).getAttribute('href')).toBe(
+    expect(await screen.findByRole('heading', { name: 'Page introuvable' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Retour vers les films' }).getAttribute('href')).toBe(
       '/movies',
     )
   })

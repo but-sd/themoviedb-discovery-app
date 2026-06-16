@@ -16,16 +16,16 @@ describe('NavBar', () => {
     )
 
     expect(screen.getByText('TMDB Discovery')).toBeTruthy()
-    expect(screen.getByText('Movies')).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Popular' }).getAttribute('href')).toBe('/movies')
-    expect(screen.getByRole('link', { name: 'Stats Films' }).getAttribute('href')).toBe(
+    expect(screen.getByText('Films')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Populaires' }).getAttribute('href')).toBe('/movies')
+    expect(screen.getByRole('link', { name: 'Statistiques' }).getAttribute('href')).toBe(
       '/movies/stats',
     )
-    expect(screen.getByRole('link', { name: 'Top Rated' }).getAttribute('href')).toBe(
+    expect(screen.getByRole('link', { name: 'Mieux notés' }).getAttribute('href')).toBe(
       '/movies/top-rated',
     )
-    expect(screen.getByRole('link', { name: 'TV Shows' }).getAttribute('href')).toBe('/tv')
-    expect(screen.getByRole('link', { name: 'API Docs' }).getAttribute('href')).toBe('/api/docs')
+    expect(screen.getByRole('link', { name: 'Séries TV' }).getAttribute('href')).toBe('/tv')
+    expect(screen.getByRole('link', { name: 'Documentation API' }).getAttribute('href')).toBe('/api/docs')
   })
 
   it('applies active class for popular movies when on /movies route', () => {
@@ -36,8 +36,8 @@ describe('NavBar', () => {
     )
 
     const moviesMenu = container.querySelector('details')
-    const popularLink = screen.getByRole('link', { name: 'Popular' })
-    const tvShowsLink = screen.getByRole('link', { name: 'TV Shows' })
+    const popularLink = screen.getByRole('link', { name: 'Populaires' })
+    const tvShowsLink = screen.getByRole('link', { name: 'Séries TV' })
 
     expect(moviesMenu?.open).toBe(true)
     expect(popularLink.className).toContain('app-nav-link-active')
@@ -52,7 +52,7 @@ describe('NavBar', () => {
     )
 
     const moviesMenu = container.querySelector('details')
-    const tvShowsLink = screen.getByRole('link', { name: 'TV Shows' })
+    const tvShowsLink = screen.getByRole('link', { name: 'Séries TV' })
 
     expect(tvShowsLink.className).toContain('app-nav-link-active')
     expect(moviesMenu?.open).toBe(false)
@@ -66,7 +66,7 @@ describe('NavBar', () => {
     )
 
     const moviesMenu = container.querySelector('details')
-    const statsLink = screen.getByRole('link', { name: 'Stats Films' })
+    const statsLink = screen.getByRole('link', { name: 'Statistiques' })
 
     expect(statsLink.className).toContain('app-nav-link-active')
     expect(moviesMenu?.open).toBe(true)
@@ -80,8 +80,8 @@ describe('NavBar', () => {
     )
 
     const moviesMenu = container.querySelector('details')
-    const topRatedLink = screen.getByRole('link', { name: 'Top Rated' })
-    const popularLink = screen.getByRole('link', { name: 'Popular' })
+    const topRatedLink = screen.getByRole('link', { name: 'Mieux notés' })
+    const popularLink = screen.getByRole('link', { name: 'Populaires' })
 
     expect(topRatedLink.className).toContain('app-nav-link-active')
     expect(popularLink.className).not.toContain('app-nav-link-active')
@@ -95,11 +95,11 @@ describe('NavBar', () => {
       </MemoryRouter>,
     )
 
-    fireEvent.click(screen.getByRole('link', { name: 'Popular' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Populaires' }))
 
     const moviesMenu = container.querySelector('details')
 
     expect(moviesMenu?.open).toBe(false)
-    expect(screen.getByRole('link', { name: 'Popular' }).className).toContain('app-nav-link-active')
+    expect(screen.getByRole('link', { name: 'Populaires' }).className).toContain('app-nav-link-active')
   })
 })

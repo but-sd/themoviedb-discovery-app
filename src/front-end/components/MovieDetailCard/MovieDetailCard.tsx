@@ -22,7 +22,7 @@ export default function MovieDetailCard({ movie }: MovieDetailCardProps) {
         <img
           className="movie-detail-hero"
           src={`${DETAIL_IMAGE_BASE_URL}${heroImage}`}
-          alt={`Artwork for ${movie.title}`}
+          alt={`Visuel de ${movie.title}`}
         />
       ) : (
         <div className="movie-detail-hero movie-detail-hero-placeholder" aria-hidden="true" />

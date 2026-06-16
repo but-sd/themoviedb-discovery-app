@@ -20,7 +20,7 @@ export default function TvListPage() {
         setItems(results)
       } catch (loadError) {
         const message =
-          loadError instanceof Error ? loadError.message : 'Could not load popular TV shows.'
+          loadError instanceof Error ? loadError.message : 'Impossible de charger les séries populaires.'
         setError(message)
       } finally {
         setIsLoading(false)
@@ -45,7 +45,7 @@ export default function TvListPage() {
       setPage(nextPage)
     } catch (loadError) {
       const message =
-        loadError instanceof Error ? loadError.message : 'Could not load more TV shows.'
+        loadError instanceof Error ? loadError.message : 'Impossible de charger plus de séries.'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -56,16 +56,16 @@ export default function TvListPage() {
     <main className="tv-show-page">
       <header className="tv-show-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
-        <h1>Series populaires</h1>
+        <h1>Séries populaires</h1>
         <p className="subtitle">
-          Series tendances en France, d'apres les donnees de <b>The Movie DB</b>.
+          Séries tendances en France, d'après les données de <b>The Movie DB</b>.
         </p>
       </header>
 
       {error ? <p className="error-banner">{error}</p> : null}
 
       {isLoading && items.length === 0 ? (
-        <p className="loading-state">Chargement des series...</p>
+        <p className="loading-state">Chargement des séries...</p>
       ) : (
         <section className="tv-show-grid" aria-live="polite">
           {items.map((item) => (

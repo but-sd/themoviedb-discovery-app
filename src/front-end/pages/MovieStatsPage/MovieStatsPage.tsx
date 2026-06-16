@@ -39,7 +39,7 @@ export default function MovieStatsPage() {
         setGenres(genreResults)
       } catch (loadError) {
         const message =
-          loadError instanceof Error ? loadError.message : 'Could not load movie statistics.'
+          loadError instanceof Error ? loadError.message : 'Impossible de charger les statistiques des films.'
         setError(message)
       } finally {
         setIsLoading(false)
@@ -58,7 +58,7 @@ export default function MovieStatsPage() {
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Statistiques des films</h1>
         <p className="subtitle">
-          Repartition par genre et indicateurs calcules sur {STATS_PAGE_COUNT} pages de films
+          Répartition par genre et indicateurs calculés sur {STATS_PAGE_COUNT} pages de films
           populaires en France.
         </p>
       </header>
@@ -71,7 +71,7 @@ export default function MovieStatsPage() {
         <>
           <section className="stats-kpis" aria-label="Indicateurs films">
             <article className="stats-card">
-              <p className="stats-label">Films analyses</p>
+              <p className="stats-label">Films analysés</p>
               <p className="stats-value">{stats.totalMovies}</p>
             </article>
 
@@ -93,7 +93,7 @@ export default function MovieStatsPage() {
             </article>
 
             <article className="stats-card">
-              <p className="stats-label">Sortie la plus recente</p>
+              <p className="stats-label">Sortie la plus récente</p>
               <p className="stats-value">{stats.latestReleaseYear ?? 'N/A'}</p>
             </article>
           </section>
@@ -101,10 +101,10 @@ export default function MovieStatsPage() {
           <section className="stats-panel" aria-labelledby="genre-chart-title">
             <div className="stats-panel-header">
               <div>
-                <h2 id="genre-chart-title">Repartition par genre</h2>
+                <h2 id="genre-chart-title">Répartition par genre</h2>
                 <p>
-                  Les genres ci-dessous representent le nombre de films appartenant a chaque
-                  categorie.
+                  Les genres ci-dessous représentent le nombre de films appartenant à chaque
+                  catégorie.
                 </p>
               </div>
             </div>
@@ -125,15 +125,15 @@ export default function MovieStatsPage() {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <p className="stats-empty">Aucune donnee de genre disponible.</p>
+              <p className="stats-empty">Aucune donnée de genre disponible.</p>
             )}
           </section>
 
           <section className="stats-panel" aria-labelledby="genre-table-title">
             <div className="stats-panel-header">
               <div>
-                <h2 id="genre-table-title">Synthese par genre</h2>
-                <p>Le pourcentage indique la part des films analyses qui appartiennent au genre.</p>
+                <h2 id="genre-table-title">Synthèse par genre</h2>
+                <p>Le pourcentage indique la part des films analysés qui appartiennent au genre.</p>
               </div>
             </div>
 

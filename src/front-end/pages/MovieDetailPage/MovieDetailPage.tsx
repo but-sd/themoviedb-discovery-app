@@ -24,7 +24,7 @@ export default function MovieDetailPage({ movieId }: MovieDetailPageProps) {
         setMovie(result)
       } catch (loadError) {
         const message =
-          loadError instanceof Error ? loadError.message : 'Could not load movie details.'
+          loadError instanceof Error ? loadError.message : 'Impossible de charger les détails du film.'
         setError(message)
       } finally {
         setIsLoading(false)

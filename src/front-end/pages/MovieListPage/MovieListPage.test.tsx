@@ -99,7 +99,7 @@ describe('MovieListPage', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByText('Could not load popular movies.')).toBeTruthy()
+    expect(await screen.findByText('Impossible de charger les films populaires.')).toBeTruthy()
   })
 
   it('renders an error message when loading more fails', async () => {
@@ -136,7 +136,7 @@ describe('MovieListPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Charger plus' }))
 
-    expect(await screen.findByText('Could not load more movies.')).toBeTruthy()
+    expect(await screen.findByText('Impossible de charger plus de films.')).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'Avatar' })).toBeTruthy()
   })
 })

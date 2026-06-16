@@ -23,7 +23,7 @@ export default function MovieListPage() {
         setMovies(results)
       } catch (loadError) {
         const message =
-          loadError instanceof Error ? loadError.message : 'Could not load popular movies.'
+          loadError instanceof Error ? loadError.message : 'Impossible de charger les films populaires.'
         setError(message)
       } finally {
         setIsLoading(false)
@@ -48,7 +48,7 @@ export default function MovieListPage() {
       setPage(nextPage)
     } catch (loadError) {
       const message =
-        loadError instanceof Error ? loadError.message : 'Could not load more movies.'
+        loadError instanceof Error ? loadError.message : 'Impossible de charger plus de films.'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -61,7 +61,7 @@ export default function MovieListPage() {
         <p className="eyebrow">The Movie DB Discovery</p>
         <h1>Films populaires</h1>
         <p className="subtitle">
-          Films tendances en France, d'apres les donnees de <b>The Movie DB</b>.
+          Films tendances en France, d'après les données de <b>The Movie DB</b>.
         </p>
       </header>
 

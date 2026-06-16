@@ -69,7 +69,7 @@ describe('MovieDetailPage', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByText('Could not load movie details.')).toBeTruthy()
+    expect(await screen.findByText('Impossible de charger les détails du film.')).toBeTruthy()
     expect(screen.queryByRole('heading', { name: 'Inception' })).toBeNull()
   })
 })
