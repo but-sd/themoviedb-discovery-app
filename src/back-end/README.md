@@ -38,6 +38,8 @@ Set one of the following variables so backend requests to TMDb are authenticated
 
 - `GET /api/movies/popular` (Docs: [Popular movies](http://localhost:3001/api/docs/#/Movies/getPopularMovies))
   - Query params: `language`, `region`, `page`
+- `GET /api/movies/top-rated` (Docs: [Top rated movies](http://localhost:3001/api/docs/#/Movies/getTopRatedMovies))
+  - Query params: `language`, `region`, `page`
 - `GET /api/movies/:id` (Docs: [Movie details](http://localhost:3001/api/docs/#/Movies/getMovieDetails))
   - Query params: `language`
 

@@ -20,14 +20,14 @@ type MediaRequestParams = {
   language?: string
 }
 
-export async function fetchPopularMovies(params?: MediaListParams): Promise<MovieItem[]> {
+async function fetchMoviesList(endpoint: 'popular' | 'top-rated', params?: MediaListParams): Promise<MovieItem[]> {
   const searchParams = new URLSearchParams({
     language: params?.language ?? 'fr-FR',
     region: params?.region ?? 'FR',
     page: String(params?.page ?? 1),
   })
 
-  const response = await fetch(`/api/movies/popular?${searchParams.toString()}`)
+  const response = await fetch(`/api/movies/${endpoint}?${searchParams.toString()}`)
 
   if (!response.ok) {
     const errorText = await response.text()
@@ -36,6 +36,14 @@ export async function fetchPopularMovies(params?: MediaListParams): Promise<Movi
 
   const data = (await response.json()) as MoviePopularResponse
   return data.results ?? []
+}
+
+export async function fetchPopularMovies(params?: MediaListParams): Promise<MovieItem[]> {
+  return fetchMoviesList('popular', params)
+}
+
+export async function fetchTopRatedMovies(params?: MediaListParams): Promise<MovieItem[]> {
+  return fetchMoviesList('top-rated', params)
 }
 
 export async function fetchPopularMoviesPages(

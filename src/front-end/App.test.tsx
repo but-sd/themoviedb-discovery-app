@@ -14,6 +14,10 @@ vi.mock('./pages/MovieStatsPage/MovieStatsPage', () => ({
   default: () => <div>Mock Movie Stats Page</div>,
 }))
 
+vi.mock('./pages/TopRatedMovieListPage/TopRatedMovieListPage', () => ({
+  default: () => <div>Mock Top Rated Movie List Page</div>,
+}))
+
 vi.mock('./pages/TvListPage/TvListPage', () => ({
   default: () => <div>Mock TV List Page</div>,
 }))
@@ -74,6 +78,16 @@ describe('App', () => {
     expect(await screen.findByText('Mock Movie Stats Page')).toBeTruthy()
   })
 
+  it('renders top rated movies list route', async () => {
+    render(
+      <MemoryRouter initialEntries={['/movies/top-rated']}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(await screen.findByText('Mock Top Rated Movie List Page')).toBeTruthy()
+  })
+
   it('renders tv list route', async () => {
     render(
       <MemoryRouter initialEntries={['/tv']}>
@@ -101,8 +115,8 @@ describe('App', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByRole('heading', { name: 'Page Not Found' })).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Return to the movies' }).getAttribute('href')).toBe(
+    expect(await screen.findByRole('heading', { name: 'Page introuvable' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Retour vers les films' }).getAttribute('href')).toBe(
       '/movies',
     )
   })

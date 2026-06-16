@@ -32,3 +32,32 @@ jobs:
         run: npm ci
       - name: "🧪 Run unit tests"
         run: npm test
+      - name: "🧾 Vitest Coverage Summary"
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('fs')
+
+          const summaryPath = 'coverage/coverage-summary.json'
+          if (!fs.existsSync(summaryPath)) {
+            fs.appendFileSync(
+              process.env.GITHUB_STEP_SUMMARY,
+              '## Vitest Test Summary\n\nCoverage summary was not generated.\n',
+            )
+            process.exit(0)
+          }
+
+          const totals = JSON.parse(fs.readFileSync(summaryPath, 'utf8')).total
+          const toRow = (label, stats) =>
+            `| ${label} | ${stats.pct}% | ${stats.covered} | ${stats.total} |\n`
+
+          let markdown = '## Vitest Test Summary\n\n'
+          markdown += '| Metric | Coverage | Covered | Total |\n'
+          markdown += '| --- | ---: | ---: | ---: |\n'
+          markdown += toRow('Lines', totals.lines)
+          markdown += toRow('Statements', totals.statements)
+          markdown += toRow('Functions', totals.functions)
+          markdown += toRow('Branches', totals.branches)
+
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown)
+          NODE

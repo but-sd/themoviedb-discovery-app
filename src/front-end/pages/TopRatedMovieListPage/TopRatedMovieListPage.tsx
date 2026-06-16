@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
 import { type MovieItem } from '../../../back-end/api-schemas'
 import MovieItemCard from '../../components/MovieItemCard/MovieItemCard'
-import { fetchPopularMovies } from '../../services/movies-service'
-import './MovieListPage.css'
+import { fetchTopRatedMovies } from '../../services/movies-service'
+import '../MovieListPage/MovieListPage.css'
 
-/**
- * Lists popular movies fetched from the backend API.
- */
-export default function MovieListPage() {
+export default function TopRatedMovieListPage() {
   const [movies, setMovies] = useState<MovieItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -19,11 +16,11 @@ export default function MovieListPage() {
       setError(null)
 
       try {
-        const results = await fetchPopularMovies({ language: 'fr-FR', region: 'FR', page: 1 })
+        const results = await fetchTopRatedMovies({ language: 'fr-FR', region: 'FR', page: 1 })
         setMovies(results)
       } catch (loadError) {
         const message =
-          loadError instanceof Error ? loadError.message : 'Impossible de charger les films populaires.'
+          loadError instanceof Error ? loadError.message : 'Impossible de charger les films les mieux notés.'
         setError(message)
       } finally {
         setIsLoading(false)
@@ -39,7 +36,7 @@ export default function MovieListPage() {
     setError(null)
 
     try {
-      const results = await fetchPopularMovies({
+      const results = await fetchTopRatedMovies({
         language: 'fr-FR',
         region: 'FR',
         page: nextPage,
@@ -48,7 +45,7 @@ export default function MovieListPage() {
       setPage(nextPage)
     } catch (loadError) {
       const message =
-        loadError instanceof Error ? loadError.message : 'Impossible de charger plus de films.'
+        loadError instanceof Error ? loadError.message : 'Impossible de charger plus de films les mieux notés.'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -59,9 +56,10 @@ export default function MovieListPage() {
     <main className="movie-page">
       <header className="movie-page-header">
         <p className="eyebrow">The Movie DB Discovery</p>
-        <h1>Films populaires</h1>
+        <h1>Films les mieux notés</h1>
         <p className="subtitle">
-          Films tendances en France, d'après les données de <b>The Movie DB</b>.
+          Les meilleurs films selon les notes TMDB en France, d&apos;après les données de{' '}
+          <b>The Movie DB</b>.
         </p>
       </header>
 

@@ -32,7 +32,7 @@ describe('TvShowDetailCard', () => {
     expect(screen.getByRole('heading', { name: 'The Last of Us' })).toBeTruthy()
     expect(screen.getByText('2023')).toBeTruthy()
     expect(screen.getByText('1h 00m')).toBeTruthy()
-    expect(screen.getByText('Rating 8.7')).toBeTruthy()
+    expect(screen.getByText('Note 8.7')).toBeTruthy()
     expect(screen.getByText('Drama')).toBeTruthy()
     expect(screen.getByText('A post-apocalyptic drama series.')).toBeTruthy()
   })
@@ -54,9 +54,9 @@ describe('TvShowDetailCard', () => {
     expect(placeholder).toBeTruthy()
 
     expect(screen.getByText('N/A')).toBeTruthy()
-    expect(screen.getByText('Runtime unavailable')).toBeTruthy()
-    expect(screen.getByText('Rating 7.0')).toBeTruthy()
-    expect(screen.getByText('No synopsis is available for this show yet.')).toBeTruthy()
+    expect(screen.getByText('Durée indisponible')).toBeTruthy()
+    expect(screen.getByText('Note 7.0')).toBeTruthy()
+    expect(screen.getByText("Aucun synopsis n'est disponible pour cette série pour le moment.")).toBeTruthy()
   })
 
   it('renders original name section when different from title', () => {
@@ -66,7 +66,7 @@ describe('TvShowDetailCard', () => {
 
     render(<TvShowDetailCard show={show} />)
 
-    expect(screen.getByText('Original name')).toBeTruthy()
+    expect(screen.getByText('Nom original')).toBeTruthy()
     expect(screen.getByText('The Last of Us: Original')).toBeTruthy()
   })
 
@@ -77,7 +77,7 @@ describe('TvShowDetailCard', () => {
 
     render(<TvShowDetailCard show={show} />)
 
-    expect(screen.queryByText('Original name')).toBeNull()
+    expect(screen.queryByText('Nom original')).toBeNull()
   })
 
   it('renders tagline when available', () => {

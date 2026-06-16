@@ -30,8 +30,8 @@ describe('MovieItemCard', () => {
     )
 
     expect(screen.getByRole('heading', { name: 'Avatar' })).toBeTruthy()
-    expect(screen.getByText('2009 · Rating 7.8')).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Open details for Avatar' }).getAttribute('href')).toBe('/movies/1')
+    expect(screen.getByText('2009 · Note 7.8')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Ouvrir les détails de Avatar' }).getAttribute('href')).toBe('/movies/1')
   })
 
   it('renders placeholder when poster is missing', () => {
@@ -59,8 +59,8 @@ describe('MovieItemCard', () => {
     )
 
     expect(screen.getByRole('heading', { name: 'No Poster Movie' })).toBeTruthy()
-    expect(screen.getByText('2020 · Rating 5.0')).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Open details for No Poster Movie' }).getAttribute('href')).toBe('/movies/2')
+    expect(screen.getByText('2020 · Note 5.0')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Ouvrir les détails de No Poster Movie' }).getAttribute('href')).toBe('/movies/2')
     expect(screen.getByRole('img', { hidden: true })).toBeTruthy()
   })
 })

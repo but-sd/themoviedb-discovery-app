@@ -16,18 +16,18 @@ export default function MovieItemCard({ movie }: MovieItemCardProps) {
     <Link
       className="item-card-link"
       to={`/movies/${movie.id}`}
-      aria-label={`Open details for ${movie.title}`}
+      aria-label={`Ouvrir les détails de ${movie.title}`}
     >
       <article className="item-card">
         {posterSrc ? (
-          <img src={posterSrc} alt={`Poster for ${movie.title}`} className="movie-poster" />
+          <img src={posterSrc} alt={`Affiche de ${movie.title}`} className="movie-poster" />
         ) : (
           <div className="movie-poster movie-poster-placeholder" aria-hidden="true" />
         )}
 
         <div className="movie-copy">
           <h2>{movie.title}</h2>
-          <p className="movie-meta">{releaseYear} · Rating {movie.vote_average.toFixed(1)}</p>
+          <p className="movie-meta">{releaseYear} · Note {movie.vote_average.toFixed(1)}</p>
         </div>
       </article>
     </Link>

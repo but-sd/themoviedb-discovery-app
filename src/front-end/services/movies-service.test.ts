@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fetchMovieDetails, fetchMovieGenres, fetchPopularMovies, fetchPopularMoviesPages } from './movies-service'
+import {
+  fetchMovieDetails,
+  fetchMovieGenres,
+  fetchPopularMovies,
+  fetchPopularMoviesPages,
+  fetchTopRatedMovies,
+} from './movies-service'
 
 describe('movies-service', () => {
   afterEach(() => {
@@ -114,6 +120,33 @@ describe('movies-service', () => {
     )
 
     await expect(fetchMovieGenres()).rejects.toThrow('Request failed with status 502')
+  })
+
+  it('fetchTopRatedMovies uses default query params and returns results', async () => {
+    const results: Array<{ id: number; title: string }> = [{ id: 2, title: 'The Godfather' }]
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ results }),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const data = await fetchTopRatedMovies()
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/movies/top-rated?language=fr-FR&region=FR&page=1')
+    expect(data).toEqual(results)
+  })
+
+  it('fetchTopRatedMovies throws response text when request fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        text: vi.fn().mockResolvedValue('API unavailable'),
+      }),
+    )
+
+    await expect(fetchTopRatedMovies()).rejects.toThrow('API unavailable')
   })
 
   it('fetchMovieDetails calls encoded endpoint and returns payload', async () => {

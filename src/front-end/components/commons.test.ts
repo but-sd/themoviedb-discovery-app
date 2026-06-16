@@ -3,11 +3,11 @@ import { formatRuntime } from './commons'
 
 describe('formatRuntime', () => {
   it('returns fallback text when runtime is undefined', () => {
-    expect(formatRuntime()).toBe('Runtime unavailable')
+    expect(formatRuntime()).toBe('Durée indisponible')
   })
 
   it('returns fallback text when runtime is 0', () => {
-    expect(formatRuntime(0)).toBe('Runtime unavailable')
+    expect(formatRuntime(0)).toBe('Durée indisponible')
   })
 
   it('formats runtimes under one hour in minutes only', () => {

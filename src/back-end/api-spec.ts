@@ -128,6 +128,43 @@ registry.registerPath({
 
 registry.registerPath({
   method: 'get',
+  path: '/api/movies/top-rated',
+  tags: ['Movies'],
+  summary: 'Get top rated movies',
+  operationId: 'getTopRatedMovies',
+  request: {
+    query: popularQuerySchema,
+  },
+  responses: {
+    200: {
+      description: 'Top rated movies from TMDB',
+      content: {
+        'application/json': {
+          schema: MoviePopularResponse,
+        },
+      },
+    },
+    500: {
+      description: 'Server error',
+      content: {
+        'application/json': {
+          schema: ErrorResponse,
+        },
+      },
+    },
+    default: {
+      description: 'TMDB upstream error',
+      content: {
+        'application/json': {
+          schema: ErrorResponse,
+        },
+      },
+    },
+  },
+})
+
+registry.registerPath({
+  method: 'get',
   path: '/api/movies/genres',
   tags: ['Movies'],
   summary: 'Get movie genres',

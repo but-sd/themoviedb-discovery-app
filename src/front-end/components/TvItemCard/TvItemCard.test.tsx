@@ -34,8 +34,8 @@ describe('TvItemCard', () => {
     )
 
     expect(screen.getByRole('heading', { name: 'The Show' })).toBeTruthy()
-    expect(screen.getByText('2020 · Rating 8.1')).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Open details for The Show' }).getAttribute('href')).toBe('/tv/42')
+    expect(screen.getByText('2020 · Note 8.1')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Ouvrir les détails de The Show' }).getAttribute('href')).toBe('/tv/42')
   })
 
   it('renders a placeholder when no poster is available', () => {
@@ -63,8 +63,8 @@ describe('TvItemCard', () => {
     )
 
     expect(screen.getByRole('heading', { name: 'No Poster Show' })).toBeTruthy()
-    expect(screen.getByText('2021 · Rating 7.5')).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Open details for No Poster Show' }).getAttribute('href')).toBe('/tv/43')
+    expect(screen.getByText('2021 · Note 7.5')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Ouvrir les détails de No Poster Show' }).getAttribute('href')).toBe('/tv/43')
 
     const placeholder = document.querySelector('.movie-poster-placeholder')
     expect(placeholder).toBeTruthy()

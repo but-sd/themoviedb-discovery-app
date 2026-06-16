@@ -77,11 +77,11 @@ describe('MovieStatsPage', () => {
     expect(fetchMovieGenres).toHaveBeenCalledWith({ language: 'fr-FR' })
     const kpiSection = screen.getByRole('region', { name: 'Indicateurs films' })
 
-    expect(within(kpiSection).getByText('Films analyses')).toBeTruthy()
+    expect(within(kpiSection).getByText('Films analysés')).toBeTruthy()
     expect(within(kpiSection).getAllByText('3')).toHaveLength(2)
     expect(screen.getByText('Genre dominant')).toBeTruthy()
     expect(screen.getByText('Action (2)')).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'Repartition par genre' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Répartition par genre' })).toBeTruthy()
     expect(screen.getByTestId('chart-shell')).toBeTruthy()
     expect(screen.getByRole('columnheader', { name: 'Genre' })).toBeTruthy()
     expect(screen.getByRole('rowheader', { name: 'Action' })).toBeTruthy()

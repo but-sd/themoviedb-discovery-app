@@ -44,7 +44,7 @@ describe('TvListPage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('Chargement des series...')).toBeTruthy()
+    expect(screen.getByText('Chargement des séries...')).toBeTruthy()
     expect(await screen.findByRole('heading', { name: 'The Show' })).toBeTruthy()
     expect(fetchPopularTvShows).toHaveBeenCalledWith({ language: 'fr-FR', region: 'FR', page: 1 })
   })
@@ -99,7 +99,7 @@ describe('TvListPage', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByText('Could not load popular TV shows.')).toBeTruthy()
+    expect(await screen.findByText('Impossible de charger les séries populaires.')).toBeTruthy()
   })
 
   it('renders an error message when loading more fails', async () => {
@@ -136,7 +136,7 @@ describe('TvListPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Charger plus' }))
 
-    expect(await screen.findByText('Could not load more TV shows.')).toBeTruthy()
+    expect(await screen.findByText('Impossible de charger plus de séries.')).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'The Show' })).toBeTruthy()
   })
 })

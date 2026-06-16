@@ -40,10 +40,10 @@ describe('TvDetailPage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('Loading TV show details...')).toBeTruthy()
+    expect(screen.getByText('Chargement des détails de la série...')).toBeTruthy()
 
     expect(await screen.findByRole('heading', { name: 'The Last of Us' })).toBeTruthy()
-    expect(screen.getByRole('link', { name: '← Back to popular TV shows' }).getAttribute('href')).toBe('/tv')
+    expect(screen.getByRole('link', { name: '← Retour vers les séries populaires' }).getAttribute('href')).toBe('/tv')
     expect(fetchTvDetails).toHaveBeenCalledWith('42', { language: 'fr-FR' })
   })
 
@@ -69,7 +69,7 @@ describe('TvDetailPage', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByText('Could not load TV show details.')).toBeTruthy()
+    expect(await screen.findByText('Impossible de charger les détails de la série.')).toBeTruthy()
     expect(screen.queryByRole('heading', { name: 'The Last of Us' })).toBeNull()
   })
 })
