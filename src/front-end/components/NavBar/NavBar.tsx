@@ -1,9 +1,10 @@
-import { useState, type SyntheticEvent } from 'react'
+import { useRef, useState, type SyntheticEvent } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import './NavBar.css'
 
 export default function NavBar() {
   const { pathname } = useLocation()
+  const moviesMenuRef = useRef<HTMLDetailsElement>(null)
   const isMoviesRoute = pathname.startsWith('/movies')
   const [hasClosedMoviesMenu, setHasClosedMoviesMenu] = useState(false)
   const isMoviesMenuOpen = isMoviesRoute && !hasClosedMoviesMenu
@@ -14,6 +15,8 @@ export default function NavBar() {
   }
 
   const closeMoviesMenu = () => {
+    // Keep DOM state and React state aligned when navigating from submenu links.
+    moviesMenuRef.current?.removeAttribute('open')
     setHasClosedMoviesMenu(true)
   }
 
@@ -27,7 +30,12 @@ export default function NavBar() {
         <p className="app-nav-brand">TMDB Discovery</p>
 
         <div className="app-nav-links">
-          <details className="app-nav-menu" open={isMoviesMenuOpen} onToggle={handleMoviesMenuToggle}>
+          <details
+            ref={moviesMenuRef}
+            className="app-nav-menu"
+            open={isMoviesMenuOpen}
+            onToggle={handleMoviesMenuToggle}
+          >
             <summary
               className={`app-nav-link app-nav-menu-trigger${
                 isMoviesMenuOpen ? ' app-nav-link-active' : ''
