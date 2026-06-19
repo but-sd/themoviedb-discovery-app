@@ -47,3 +47,9 @@
   - Router tests use `MemoryRouter`.
   - E2E tests in `e2e/` mock API responses with `page.route(...)` and do not depend on live TMDB.
 
+
+## Commit message guideline
+
+- Follow the Conventional Commits format: `<type>(<optional-scope>): <description>`.
+- Use lowercase commit types such as `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, and `ci`.
+- Keep the subject concise and imperative (for example: `feat(front-end): add movie genre filter`).
