@@ -54,7 +54,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.4",
-    "concurrently": "^9.2.1",
+    "concurrently": "^9.2.3",
     "devmoji": "^2.3.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
