@@ -16,10 +16,9 @@ Default server URL:
 
 ## Environment Variables
 
-Set one of the following variables so backend requests to TMDb are authenticated:
+Set this variable so backend requests to TMDb are authenticated:
 
-- `TMDB_API_KEY`
-- `VITE_TMDB_API_KEY`
+- `TMDB_API_TOKEN`
 
 ## Endpoints
 

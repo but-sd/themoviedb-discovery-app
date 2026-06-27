@@ -1,6 +1,6 @@
 import type { Response } from 'express'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { TMDB_API_BASE_URL, getRequiredTmdbApiKey, getSingleQueryParam } from './utils'
+import { TMDB_API_BASE_URL, getRequiredTmdbAuthHeaders, getSingleQueryParam } from './utils'
 
 function createMockResponse() {
   const res = {
@@ -18,8 +18,7 @@ function createMockResponse() {
 
 describe('utils', () => {
   afterEach(() => {
-    delete process.env.TMDB_API_KEY
-    delete process.env.VITE_TMDB_API_KEY
+    delete process.env.TMDB_API_TOKEN
     vi.restoreAllMocks()
   })
 
@@ -51,48 +50,30 @@ describe('utils', () => {
     })
   })
 
-  describe('getRequiredTmdbApiKey', () => {
-    it('returns TMDB_API_KEY when present', () => {
-      process.env.TMDB_API_KEY = 'tmdb-key'
+  describe('getRequiredTmdbAuthHeaders', () => {
+    it('returns bearer headers when TMDB_API_TOKEN is present', () => {
+      process.env.TMDB_API_TOKEN = 'tmdb-token'
       const res = createMockResponse()
 
-      const result = getRequiredTmdbApiKey(res)
+      const result = getRequiredTmdbAuthHeaders(res)
 
-      expect(result).toBe('tmdb-key')
+      expect(result).toEqual({
+        Authorization: 'Bearer tmdb-token',
+        Accept: 'application/json',
+      })
       expect(res.status).not.toHaveBeenCalled()
       expect(res.json).not.toHaveBeenCalled()
     })
 
-    it('returns VITE_TMDB_API_KEY when TMDB_API_KEY is missing', () => {
-      process.env.VITE_TMDB_API_KEY = 'vite-key'
+    it('returns null and sends a 500 response when no token is set', () => {
       const res = createMockResponse()
 
-      const result = getRequiredTmdbApiKey(res)
-
-      expect(result).toBe('vite-key')
-      expect(res.status).not.toHaveBeenCalled()
-      expect(res.json).not.toHaveBeenCalled()
-    })
-
-    it('prefers TMDB_API_KEY over VITE_TMDB_API_KEY', () => {
-      process.env.TMDB_API_KEY = 'tmdb-key'
-      process.env.VITE_TMDB_API_KEY = 'vite-key'
-      const res = createMockResponse()
-
-      const result = getRequiredTmdbApiKey(res)
-
-      expect(result).toBe('tmdb-key')
-    })
-
-    it('returns null and sends a 500 response when no API key is set', () => {
-      const res = createMockResponse()
-
-      const result = getRequiredTmdbApiKey(res)
+      const result = getRequiredTmdbAuthHeaders(res)
 
       expect(result).toBeNull()
       expect(res.status).toHaveBeenCalledWith(500)
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Missing TMDB_API_KEY in environment',
+        error: 'Missing TMDB_API_TOKEN in environment',
       })
     })
   })

@@ -1,6 +1,6 @@
 import type { Express } from 'express'
 import type { MovieDetails, MovieGenresResponse, MoviePopularResponse } from './api-schemas'
-import { TMDB_API_BASE_URL, getRequiredTmdbApiKey, getSingleQueryParam } from './utils'
+import { TMDB_API_BASE_URL, getRequiredTmdbAuthHeaders, getSingleQueryParam } from './utils'
 
 /**
  * TMDB_MOVIE_API_BASE_URL is a constant that holds the base URL for movie-related endpoints of The Movie Database (TMDB) API.
@@ -16,8 +16,8 @@ const TMDB_MOVIE_GENRE_API_BASE_URL = `${TMDB_API_BASE_URL}/3/genre/movie`
  * - GET /api/movies/genres: Fetches available movie genres from TMDB, with an optional language query parameter.
  * - GET /api/movies/:id: Fetches detailed information about a specific movie by its ID, with an optional language query parameter.
  *
- * Both endpoints require a valid TMDB API key to be set in the environment variables (TMDB_API_KEY or VITE_TMDB_API_KEY).
- * The endpoints handle errors gracefully, returning appropriate HTTP status codes and error messages in case of failures.  
+ * Both endpoints require a valid TMDB API token to be set in the environment variables (TMDB_API_TOKEN).
+ * The endpoints handle errors gracefully, returning appropriate HTTP status codes and error messages in case of failures.
  */
 export function registerMoviesApi(app: Express): void {
   /**
@@ -31,9 +31,9 @@ export function registerMoviesApi(app: Express): void {
    * Response: JSON object containing popular movies or an error message.
    */
   app.get('/api/movies/popular', async (req, res) => {
-    const apiKey = getRequiredTmdbApiKey(res)
+    const tmdbHeaders = getRequiredTmdbAuthHeaders(res)
 
-    if (!apiKey) {
+    if (!tmdbHeaders) {
       return
     }
 
@@ -43,13 +43,12 @@ export function registerMoviesApi(app: Express): void {
 
     const tmdbUrl =
       `${TMDB_MOVIE_API_BASE_URL}/popular?` +
-      `api_key=${encodeURIComponent(apiKey)}` +
-      `&language=${encodeURIComponent(language)}` +
+      `language=${encodeURIComponent(language)}` +
       `&region=${encodeURIComponent(region)}` +
       `&page=${encodeURIComponent(page)}`
 
     try {
-      const tmdbResponse = await fetch(tmdbUrl)
+      const tmdbResponse = await fetch(tmdbUrl, { headers: tmdbHeaders })
 
       if (!tmdbResponse.ok) {
         const errorBody = await tmdbResponse.text()
@@ -77,20 +76,19 @@ export function registerMoviesApi(app: Express): void {
    * Response: JSON object containing movie genres or an error message.
    */
   app.get('/api/movies/genres', async (req, res) => {
-    const apiKey = getRequiredTmdbApiKey(res)
+    const tmdbHeaders = getRequiredTmdbAuthHeaders(res)
 
-    if (!apiKey) {
+    if (!tmdbHeaders) {
       return
     }
 
     const language = getSingleQueryParam(req.query.language, 'fr-FR')
     const tmdbUrl =
       `${TMDB_MOVIE_GENRE_API_BASE_URL}/list?` +
-      `api_key=${encodeURIComponent(apiKey)}` +
-      `&language=${encodeURIComponent(language)}`
+      `language=${encodeURIComponent(language)}`
 
     try {
-      const tmdbResponse = await fetch(tmdbUrl)
+      const tmdbResponse = await fetch(tmdbUrl, { headers: tmdbHeaders })
 
       if (!tmdbResponse.ok) {
         const errorBody = await tmdbResponse.text()
@@ -121,9 +119,9 @@ export function registerMoviesApi(app: Express): void {
    * Note: The movie ID is expected to be a valid TMDB movie ID. If the ID is invalid or the movie is not found, an appropriate error message will be returned.
    */
   app.get('/api/movies/:id', async (req, res) => {
-    const apiKey = getRequiredTmdbApiKey(res)
+    const tmdbHeaders = getRequiredTmdbAuthHeaders(res)
 
-    if (!apiKey) {
+    if (!tmdbHeaders) {
       return
     }
 
@@ -132,11 +130,10 @@ export function registerMoviesApi(app: Express): void {
 
     const tmdbUrl =
       `${TMDB_MOVIE_API_BASE_URL}/${encodeURIComponent(movieId)}?` +
-      `api_key=${encodeURIComponent(apiKey)}` +
-      `&language=${encodeURIComponent(language)}`
+      `language=${encodeURIComponent(language)}`
 
     try {
-      const tmdbResponse = await fetch(tmdbUrl)
+      const tmdbResponse = await fetch(tmdbUrl, { headers: tmdbHeaders })
 
       if (!tmdbResponse.ok) {
         const errorBody = await tmdbResponse.text()
