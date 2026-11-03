@@ -12,12 +12,15 @@ import type {
   TmdbMoviesRawResponse,
 } from '../types/MoviesTypes';
 
-const { toSupportedMovieMock, toSupportedMovieDetailsMock } = vi.hoisted(
-  () => ({
-    toSupportedMovieMock: vi.fn(),
-    toSupportedMovieDetailsMock: vi.fn(),
-  }),
-);
+const {
+  tmdbAccessTokenMock: { value: tmdbAccessTokenMock },
+  toSupportedMovieMock,
+  toSupportedMovieDetailsMock,
+} = vi.hoisted(() => ({
+  tmdbAccessTokenMock: { value: 'test-access-token' },
+  toSupportedMovieMock: vi.fn(),
+  toSupportedMovieDetailsMock: vi.fn(),
+}));
 
 vi.mock('../utils/converter', () => ({
   toSupportedMovie: toSupportedMovieMock,
@@ -25,7 +28,9 @@ vi.mock('../utils/converter', () => ({
 }));
 
 vi.mock('../utils/config', () => ({
-  tmdbAccessToken: 'test-access-token',
+  get tmdbAccessToken() {
+    return tmdbAccessTokenMock.value;
+  },
 }));
 
 type RouteHandler = (
@@ -65,6 +70,7 @@ function tmdbResponse(data: unknown, ok = true, status = 200) {
 describe('movies API', () => {
   beforeEach(() => {
     handlers.clear();
+    tmdbAccessTokenMock.value = 'test-access-token';
     registerMoviesApi(app);
     toSupportedMovieMock.mockReset();
     toSupportedMovieDetailsMock.mockReset();
@@ -78,6 +84,38 @@ describe('movies API', () => {
   });
 
   describe('GET /api/movies/popular', () => {
+    it('sends JWT access tokens as bearer authorization', async () => {
+      // Arrange
+      tmdbAccessTokenMock.value = 'eyJhbGciOiJIUzI1NiJ9.payload.signature';
+      const fetchMock = vi.fn().mockResolvedValueOnce(
+        tmdbResponse({
+          page: 1,
+          results: [],
+          total_pages: 1,
+          total_results: 0,
+        }),
+      );
+      vi.stubGlobal('fetch', fetchMock);
+      const response = createResponse();
+
+      // Act
+      await getHandler('/api/movies/popular')(
+        { query: {} } as Request,
+        response,
+        vi.fn(),
+      );
+
+      // Assert
+      expect(fetchMock).toHaveBeenCalledWith(
+        `https://api.themoviedb.org/3/movie/popular?language=${DEFAULT_LANGUAGE}&page=${DEFAULT_PAGE}&region=${DEFAULT_REGION}`,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            Authorization: `Bearer ${tmdbAccessTokenMock.value}`,
+          }),
+        }),
+      );
+    });
+
     it('returns popular movies', async () => {
       // Arrange
       const rawMovie = { id: 1 };
