@@ -76,7 +76,13 @@ function initializeMoviesSchema(database: DatabaseSync): void {
       -- The overview or synopsis of the movie
       overview TEXT NOT NULL,
       -- The release date of the movie as TEXT in the format 'YYYY-MM-DD'; SQLite has no dedicated DATE type
-      release_date TEXT,
+      release_date TEXT CHECK (
+        release_date IS NULL
+        OR (
+          strftime('%Y-%m-%d', release_date) IS NOT NULL
+          AND strftime('%Y-%m-%d', release_date) = release_date
+        )
+      ),
       -- The year of the movie's release, generated from the release_date
       release_year INTEGER GENERATED ALWAYS AS (CAST(strftime('%Y', release_date) AS INTEGER)) STORED,
       -- The popularity score of the movie
