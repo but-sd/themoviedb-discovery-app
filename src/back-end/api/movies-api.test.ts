@@ -5,7 +5,6 @@ import {
   DEFAULT_PAGE,
   DEFAULT_REGION,
 } from '../utils/constants';
-import { tmdbAccessToken } from '../utils/config';
 import * as movieQueryParams from '../utils/movie-query-params';
 import { registerMoviesApi } from './movies-api';
 import type {
@@ -111,10 +110,10 @@ describe('movies API', () => {
 
       // Assert that the fetch function was called with the correct URL and headers
       expect(fetchMock).toHaveBeenCalledWith(
-        `https://api.themoviedb.org/3/movie/popular?language=${DEFAULT_LANGUAGE}&page=${DEFAULT_PAGE}&region=${DEFAULT_REGION}`,
+        `https://api.themoviedb.org/3/movie/popular?language=${DEFAULT_LANGUAGE}&page=${DEFAULT_PAGE}&region=${DEFAULT_REGION}&api_key=test-access-token`,
         expect.objectContaining({
           headers: expect.objectContaining({
-            Authorization: `Bearer ${tmdbAccessToken}`,
+            'Content-Type': 'application/json;charset=utf-8',
           }),
         }),
       );
@@ -179,10 +178,10 @@ describe('movies API', () => {
 
       // Assert
       expect(fetchMock).toHaveBeenCalledWith(
-        `https://api.themoviedb.org/3/movie/42?language=${DEFAULT_LANGUAGE}&page=${DEFAULT_PAGE}&region=${DEFAULT_REGION}`,
+        `https://api.themoviedb.org/3/movie/42?language=${DEFAULT_LANGUAGE}&page=${DEFAULT_PAGE}&region=${DEFAULT_REGION}&api_key=test-access-token`,
         expect.objectContaining({
           headers: expect.objectContaining({
-            Authorization: `Bearer ${tmdbAccessToken}`,
+            'Content-Type': 'application/json;charset=utf-8',
           }),
         }),
       );
