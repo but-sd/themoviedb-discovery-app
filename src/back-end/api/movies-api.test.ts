@@ -13,7 +13,7 @@ import type {
 } from '../types/MoviesTypes';
 
 const {
-  tmdbAccessTokenMock: { value: tmdbAccessTokenMock },
+  tmdbAccessTokenMock,
   toSupportedMovieMock,
   toSupportedMovieDetailsMock,
 } = vi.hoisted(() => ({
