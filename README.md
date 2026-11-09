@@ -60,6 +60,21 @@ npx tsx src/back-end/backend-cli.ts create-database --path ./data/ma-base.sqlite
 
 La commande initialise le schéma sans supprimer les données d'une base existante.
 
+Pour importer ou actualiser les genres depuis le fichier CSV fourni :
+
+```sh
+npx tsx src/back-end/backend-cli.ts add-genres ./data/genres.csv
+npx tsx src/back-end/backend-cli.ts add-genres ./data/genres.csv --path ./data/ma-base.sqlite
+```
+
+Pour supprimer les genres qui ne sont associés à aucun film :
+
+```sh
+npx tsx src/back-end/backend-cli.ts clean-genres
+```
+
+Les commandes affichent le nombre de genres traités et le chemin de la base utilisée.
+
 Le [MCD et le schéma relationnel](docs/database-model.md) décrivent les
 entités, les cardinalités et les contraintes utilisées pour le tableau de bord.
 
