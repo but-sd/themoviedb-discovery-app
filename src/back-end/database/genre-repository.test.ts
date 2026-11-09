@@ -1,6 +1,11 @@
 import { DatabaseSync } from 'node:sqlite';
 import { describe, expect, it } from 'vitest';
-import { getGenreById, getGenres, upsertGenres } from './genre-repository.ts';
+import {
+  deleteUnusedGenres,
+  getGenreById,
+  getGenres,
+  upsertGenres,
+} from './genre-repository.ts';
 import { initializeSchema } from './schema.ts';
 
 describe('genre-repository', () => {
@@ -36,6 +41,49 @@ describe('genre-repository', () => {
     try {
       upsertGenres(database, []);
       expect(() => upsertGenres(database, [{ id: 18 } as never])).toThrow();
+    } finally {
+      database.close();
+    }
+  });
+
+  it('deletes only genres without a movie association', () => {
+    const database = new DatabaseSync(':memory:');
+    initializeSchema(database);
+
+    try {
+      upsertGenres(database, [
+        { id: 18, name: 'Drama' },
+        { id: 35, name: 'Comedy' },
+      ]);
+      database
+        .prepare(
+          `INSERT INTO movies (
+            id, title, original_title, original_language, overview,
+            collected_at
+          ) VALUES (?, ?, ?, ?, ?, ?)`,
+        )
+        .run(1, 'Movie', 'Movie', 'en', '', '2026-01-01T00:00:00Z');
+      database
+        .prepare('INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)')
+        .run(1, 18);
+
+      expect(deleteUnusedGenres(database)).toBe(1);
+      expect(getGenres(database)).toEqual([{ id: 18, name: 'Drama' }]);
+    } finally {
+      database.close();
+    }
+  });
+
+  it('rolls back cleanup when the association table cannot be queried', () => {
+    const database = new DatabaseSync(':memory:');
+    initializeSchema(database);
+
+    try {
+      upsertGenres(database, [{ id: 18, name: 'Drama' }]);
+      database.exec('DROP TABLE movie_genres');
+
+      expect(() => deleteUnusedGenres(database)).toThrow(/no such table/);
+      expect(getGenres(database)).toEqual([{ id: 18, name: 'Drama' }]);
     } finally {
       database.close();
     }
