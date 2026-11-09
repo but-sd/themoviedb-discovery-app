@@ -130,5 +130,153 @@ describe('schema.ts', () => {
         database.close();
       }
     });
+
+    it('enforces valid dates and positive known movie measures', () => {
+      const database = new DatabaseSync(':memory:');
+      try {
+        initializeSchema(database);
+
+        const insertMovie = database.prepare(`
+          INSERT INTO movies (
+            id, title, original_title, original_language, overview,
+            release_date, runtime_minutes, budget, revenue, collected_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+
+        expect(() =>
+          insertMovie.run(
+            1,
+            'Movie',
+            'Movie',
+            'en',
+            '',
+            'not-a-date',
+            120,
+            1,
+            1,
+            '2026-01-01T00:00:00Z',
+          ),
+        ).toThrow(/CHECK constraint failed/);
+
+        expect(() =>
+          insertMovie.run(
+            1,
+            'Movie',
+            'Movie',
+            'en',
+            '',
+            '2026-01-01',
+            0,
+            1,
+            1,
+            '2026-01-01T00:00:00Z',
+          ),
+        ).toThrow(/CHECK constraint failed/);
+
+        expect(() =>
+          insertMovie.run(
+            1,
+            'Movie',
+            'Movie',
+            'en',
+            '',
+            '2026-01-01',
+            120,
+            0,
+            1,
+            '2026-01-01T00:00:00Z',
+          ),
+        ).toThrow(/CHECK constraint failed/);
+
+        expect(() =>
+          insertMovie.run(
+            1,
+            'Movie',
+            'Movie',
+            'en',
+            '',
+            '2026-01-01',
+            120,
+            1,
+            0,
+            '2026-01-01T00:00:00Z',
+          ),
+        ).toThrow(/CHECK constraint failed/);
+
+        insertMovie.run(
+          1,
+          'Movie',
+          'Movie',
+          'en',
+          '',
+          '2026-01-01',
+          null,
+          null,
+          null,
+          '2026-01-01T00:00:00Z',
+        );
+
+        expect(
+          database
+            .prepare(
+              'SELECT release_year, runtime_minutes, budget, revenue FROM movies',
+            )
+            .get(),
+        ).toEqual({
+          release_year: 2026,
+          runtime_minutes: null,
+          budget: null,
+          revenue: null,
+        });
+      } finally {
+        database.close();
+      }
+    });
+
+    it('prevents duplicate movie associations while preserving catalog references', () => {
+      const database = new DatabaseSync(':memory:');
+      try {
+        initializeSchema(database);
+        database
+          .prepare(
+            'INSERT INTO movies (id, title, original_title, original_language, overview, collected_at) VALUES (?, ?, ?, ?, ?, ?)',
+          )
+          .run(1, 'Movie', 'Movie', 'en', '', '2026-01-01T00:00:00Z');
+        database
+          .prepare('INSERT INTO genres (id, name) VALUES (?, ?)')
+          .run(18, 'Drama');
+        database
+          .prepare('INSERT INTO countries (code, name) VALUES (?, ?)')
+          .run('FR', 'France');
+
+        database
+          .prepare(
+            'INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)',
+          )
+          .run(1, 18);
+        database
+          .prepare(
+            'INSERT INTO production_countries (movie_id, country_code) VALUES (?, ?)',
+          )
+          .run(1, 'FR');
+
+        expect(() =>
+          database
+            .prepare(
+              'INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)',
+            )
+            .run(1, 18),
+        ).toThrow(/UNIQUE constraint failed/);
+        expect(() =>
+          database
+            .prepare(
+              'INSERT INTO production_countries (movie_id, country_code) VALUES (?, ?)',
+            )
+            .run(1, 'FR'),
+        ).toThrow(/UNIQUE constraint failed/);
+      } finally {
+        database.close();
+      }
+    });
   });
 });

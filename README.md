@@ -60,6 +60,9 @@ npx tsx src/back-end/backend-cli.ts create-database --path ./data/ma-base.sqlite
 
 La commande initialise le schéma sans supprimer les données d'une base existante.
 
+Le [MCD et le schéma relationnel](docs/database-model.md) décrivent les
+entités, les cardinalités et les contraintes utilisées pour le tableau de bord.
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |
