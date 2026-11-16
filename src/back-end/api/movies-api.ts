@@ -28,7 +28,7 @@ export function registerMoviesApi(app: Express): void {
         queryParams = createDiscoverMovieQueryParams(_req.query);
       } catch (error) {
         res.status(400).json({
-          error: error instanceof Error ? error.message : 'Invalid year',
+          error: (error as Error).message,
         });
         return;
       }
