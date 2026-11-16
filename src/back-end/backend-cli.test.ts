@@ -168,6 +168,12 @@ describe('backend-cli.ts', () => {
     it('validates all row-level errors', async () => {
       const parseCountriesCsv = await loadCountriesParser();
 
+      expect(() => parseCountriesCsv('country,name\nFR,France')).toThrow(
+        'Invalid countries CSV headers',
+      );
+      expect(() => parseCountriesCsv('code,name\nFR')).toThrow(
+        'Invalid countries CSV row',
+      );
       expect(() => parseCountriesCsv('code,name\nfr,France')).toThrow(
         'Invalid country code',
       );
@@ -175,11 +181,27 @@ describe('backend-cli.ts', () => {
         'Invalid country name',
       );
       expect(() => parseCountriesCsv('code,name\nFR')).toThrow(
-        'Invalid countries CSV syntax',
+        'Invalid countries CSV row',
       );
       expect(() => parseCountriesCsv('code,name\nFR,"France')).toThrow(
         'Invalid countries CSV syntax',
       );
+    });
+
+    it('reports parser failures that are not Error instances', async () => {
+      vi.doMock('csv-parse/sync', () => ({
+        parse: () => {
+          throw 'parser failure';
+        },
+      }));
+      vi.resetModules();
+
+      const { parseCountriesCsv } = await import('./backend-cli.ts');
+
+      expect(() => parseCountriesCsv('code,name\nFR,France')).toThrow(
+        'Invalid countries CSV syntax: parser failure',
+      );
+      vi.doUnmock('csv-parse/sync');
     });
   });
 

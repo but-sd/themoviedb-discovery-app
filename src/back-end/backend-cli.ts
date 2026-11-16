@@ -18,6 +18,7 @@ export function parseCountriesCsv(content: string): Country[] {
   try {
     records = parse(content, {
       bom: true,
+      relax_column_count: true,
       skip_empty_lines: true,
       trim: true,
     }) as string[][];
