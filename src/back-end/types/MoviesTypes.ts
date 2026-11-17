@@ -66,7 +66,12 @@ export type MovieDetails = Omit<
 >;
 
 export type Country = {
-  code: string;
+  code: string
+  name: string
+};
+  
+export type Genre = {
+  id: number;
   name: string;
 };
 
