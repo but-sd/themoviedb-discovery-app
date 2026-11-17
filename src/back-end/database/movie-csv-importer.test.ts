@@ -139,6 +139,13 @@ describe('movie-csv-importer.ts', () => {
     expect(movies).toEqual([]);
   });
 
+  it('rejette un fichier vide sans en-têtes', () => {
+    // Arrange et act et assert : aucun en-tête n'est fourni.
+    expect(() => parseMoviesCsv('')).toThrow(
+      'Le fichier CSV doit contenir les en-têtes des films.',
+    );
+  });
+
   it('importe puis actualise un film sans créer de doublon', () => {
     // Arrange
     const database = createDatabase();
