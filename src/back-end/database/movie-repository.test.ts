@@ -11,7 +11,7 @@ import {
   upsertMovies,
 } from './movie-repository';
 import { getGenres } from './genre-repository';
-import { getCountries } from './country-repository';
+import { getCountries, upsertCountries } from './country-repository';
 import type { MovieRecordInput } from '../types/MoviesTypes';
 
 describe('movie-repository.ts', () => {
@@ -211,6 +211,27 @@ describe('movie-repository.ts', () => {
       expect(getMovieGenreIds(database, 2)).toEqual([18]);
       expect(getMovieCountryCodes(database, 2)).toEqual(['FR']);
       expect(getGenres(database)).toContainEqual({ id: 18, name: 'Drame' });
+    });
+
+    it('conserve le nom traduit d’un pays déjà présent dans le catalogue', () => {
+      // Arrange : le catalogue contient le nom traduit du pays.
+      const database = createDatabase();
+      upsertCountries(database, [{ code: 'US', name: 'États-Unis' }]);
+
+      // Act : le détail TMDB fournit le nom anglais.
+      saveMoviesWithRelations(database, [
+        {
+          movie: createMovie({ id: 1 }),
+          genres: [],
+          countries: [{ code: 'US', name: 'United States of America' }],
+        },
+      ]);
+
+      // Assert
+      expect(getCountries(database)).toEqual([
+        { code: 'US', name: 'États-Unis' },
+      ]);
+      expect(getMovieCountryCodes(database, 1)).toEqual(['US']);
     });
 
     it('ne modifie rien pour une entrée vide', () => {

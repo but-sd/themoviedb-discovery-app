@@ -130,6 +130,7 @@ export function upsertMovies(
 
 /**
  * Inserts or updates movies together with their genres and production countries.
+ * Missing genres and countries are created; existing countries keep their name.
  * The previous associations of each movie are replaced so that the movie, its
  * genres and its countries stay consistent. Everything runs in one transaction.
  * @param database The SQLite database.
@@ -149,10 +150,11 @@ export function saveMoviesWithRelations(
     INSERT INTO genres (id, name) VALUES (?, ?)
     ON CONFLICT(id) DO UPDATE SET name = excluded.name
   `);
-  const upsertCountry = database.prepare(`
-    INSERT INTO countries (code, name) VALUES (?, ?)
-    ON CONFLICT(code) DO UPDATE SET name = excluded.name
-  `);
+  // TMDB movie details only provide English country names: an existing
+  // country keeps the translated name imported from the countries catalog.
+  const insertMissingCountry = database.prepare(
+    'INSERT OR IGNORE INTO countries (code, name) VALUES (?, ?)',
+  );
   const upsertMovie = database.prepare(MOVIE_UPSERT_SQL);
   const deleteGenres = database.prepare(
     'DELETE FROM movie_genres WHERE movie_id = ?',
@@ -174,7 +176,7 @@ export function saveMoviesWithRelations(
         upsertGenre.run(genre.id, genre.name);
       }
       for (const country of countries) {
-        upsertCountry.run(country.code, country.name);
+        insertMissingCountry.run(country.code, country.name);
       }
 
       upsertMovie.run(...toMovieParameters(movie));
