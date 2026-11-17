@@ -1,7 +1,12 @@
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach, describe, expect, it } from 'vitest';
 import { initializeSchema } from './schema';
-import { getGenreById, getGenres, upsertGenres } from './genre-repository';
+import {
+  deleteUnusedGenres,
+  getGenreById,
+  getGenres,
+  upsertGenres,
+} from './genre-repository';
 import type { Genre } from '../types/MoviesTypes';
 
 describe('genre repository', () => {
@@ -105,5 +110,44 @@ describe('genre repository', () => {
       upsertGenres(database, [{ id: 18, name: null as unknown as string }]),
     ).toThrow(/NOT NULL constraint failed/);
     expect(getGenres(database)).toEqual([]);
+  });
+
+  it('rolls back the complete import when one genre is invalid', () => {
+    // Arrange
+    const database = createDatabase();
+    upsertGenres(database, [{ id: 18, name: 'Drama' }]);
+
+    // Act and assert
+    expect(() =>
+      upsertGenres(database, [
+        { id: 28, name: 'Action' },
+        { id: 35, name: null as unknown as string },
+      ]),
+    ).toThrow(/NOT NULL constraint failed/);
+    expect(getGenres(database)).toEqual([{ id: 18, name: 'Drama' }]);
+  });
+
+  it('deletes only genres without a movie association', () => {
+    // Arrange
+    const database = createDatabase();
+    upsertGenres(database, [
+      { id: 18, name: 'Drama' },
+      { id: 28, name: 'Action' },
+    ]);
+    database
+      .prepare(
+        'INSERT INTO movies (id, title, original_title, original_language, overview, collected_at) VALUES (?, ?, ?, ?, ?, ?)',
+      )
+      .run(1, 'Movie', 'Movie', 'en', '', '2026-01-01');
+    database
+      .prepare('INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)')
+      .run(1, 18);
+
+    // Act
+    const deletedCount = deleteUnusedGenres(database);
+
+    // Assert
+    expect(deletedCount).toBe(1);
+    expect(getGenres(database)).toEqual([{ id: 18, name: 'Drama' }]);
   });
 });

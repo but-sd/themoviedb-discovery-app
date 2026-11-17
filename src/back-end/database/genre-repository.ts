@@ -28,7 +28,7 @@ export function getGenres(database: DatabaseSync): Genre[] {
 export function upsertGenres(
   database: DatabaseSync,
   genres: Iterable<Genre>,
-): void {
+): number {
   database.exec('BEGIN TRANSACTION');
   try {
     const statement = database.prepare(`
@@ -36,14 +36,35 @@ export function upsertGenres(
       VALUES (?, ?)
       ON CONFLICT(id) DO UPDATE SET name = excluded.name
     `);
+    let count = 0;
 
     for (const genre of genres) {
       statement.run(genre.id, genre.name);
+      count += 1;
     }
 
     database.exec('COMMIT');
+    return count;
   } catch (error) {
     database.exec('ROLLBACK');
     throw error;
   }
+}
+
+/**
+ * Removes genres that are not associated with any movie.
+ */
+export function deleteUnusedGenres(database: DatabaseSync): number {
+  const result = database
+    .prepare(`
+      DELETE FROM genres
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM movie_genres
+        WHERE movie_genres.genre_id = genres.id
+      )
+    `)
+    .run();
+
+  return Number(result.changes);
 }
