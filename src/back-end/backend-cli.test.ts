@@ -15,6 +15,7 @@ const {
   deleteUnreferencedCountriesMock,
   saveGenresMock,
   deleteUnusedGenresMock,
+  saveMoviesMock,
 } = vi.hoisted(() => {
   const closeMock = vi.fn();
   const databaseMock = { close: closeMock };
@@ -27,6 +28,7 @@ const {
     deleteUnreferencedCountriesMock: vi.fn(),
     saveGenresMock: vi.fn(),
     deleteUnusedGenresMock: vi.fn(),
+    saveMoviesMock: vi.fn(),
   };
 });
 
@@ -50,6 +52,10 @@ vi.mock('./database/genre-repository.ts', () => ({
   saveGenres: saveGenresMock,
 }));
 
+vi.mock('./database/movie-repository.ts', () => ({
+  saveMovies: saveMoviesMock,
+}));
+
 /**
  * Executes the backend CLI with the specified command-line arguments
  * @param args The command-line arguments to pass to the CLI
@@ -69,6 +75,16 @@ async function loadCountriesParser(): Promise<
 > {
   const module = await import('./backend-cli.ts');
   return module.parseCountriesCsv;
+}
+
+async function loadMoviesParser(): Promise<
+  (content: string) => Array<{ id: number; title: string }>
+> {
+  const module = await import('./backend-cli.ts');
+  return module.parseMoviesCsv as (content: string) => Array<{
+    id: number;
+    title: string;
+  }>;
 }
 
 describe('backend-cli.ts', () => {
@@ -320,6 +336,155 @@ describe('backend-cli.ts', () => {
       } finally {
         logSpy.mockRestore();
       }
+    });
+
+    describe('add-movies', () => {
+      it('imports movies and their relations from a CSV file', async () => {
+        const csvPath = './data/test-movies.csv';
+        readFileSyncMock.mockReturnValueOnce(
+          'id,title,original_title,original_language,overview,release_date,popularity,vote_average,vote_count,poster_path,backdrop_path,runtime,budget,revenue,genres,production_countries\n' +
+            '1,Movie,Movie,en,Overview,2020-01-01,10,7.5,20,/poster,/backdrop,120,100,200,"[18]","[{""iso_3166_1"":""FR""}]"\n',
+        );
+        const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+        try {
+          await runCliWithArgs([
+            'add-movies',
+            csvPath,
+            '--path',
+            './data/test.sqlite',
+          ]);
+
+          expect(saveMoviesMock).toHaveBeenCalledWith(databaseMock, [
+            expect.objectContaining({
+              id: 1,
+              title: 'Movie',
+              genre_ids: [18],
+              production_country_codes: ['FR'],
+            }),
+          ]);
+          expect(closeMock).toHaveBeenCalledOnce();
+        } finally {
+          logSpy.mockRestore();
+        }
+      });
+
+      it('rejects invalid movie CSV headers', async () => {
+        readFileSyncMock.mockReturnValueOnce('wrong,headers\n1,Movie\n');
+
+        await expect(
+          runCliWithArgs(['add-movies', './data/test-movies.csv']),
+        ).rejects.toThrow('Invalid movies CSV headers');
+        expect(saveMoviesMock).not.toHaveBeenCalled();
+        expect(closeMock).toHaveBeenCalledOnce();
+      });
+
+      it('rejects invalid rows, JSON and relations', async () => {
+        const parseMoviesCsv = await loadMoviesParser();
+        const base =
+          'id,title,original_title,original_language,overview,release_date,popularity,vote_average,vote_count,poster_path,backdrop_path,runtime,budget,revenue,genres,production_countries\n';
+        expect(() => parseMoviesCsv(`${base}1,Movie`)).toThrow(
+          'Invalid movie CSV row',
+        );
+        expect(() => parseMoviesCsv(`${base}1,"Movie`)).toThrow(
+          'Invalid movies CSV syntax',
+        );
+        expect(() =>
+          parseMoviesCsv(
+            `${base}${[
+              'invalid',
+              'Movie',
+              'Movie',
+              'en',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '[18]',
+              '[]',
+            ].join(',')}`,
+          ),
+        ).toThrow('Invalid movie on CSV line 2');
+        expect(() =>
+          parseMoviesCsv(`${base}1,Movie,Movie,en,,,,,,,,,,,,bad`),
+        ).toThrow('Invalid movie JSON');
+        expect(() =>
+          parseMoviesCsv(
+            `${base}${[
+              '1',
+              'Movie',
+              'Movie',
+              'en',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '[18]',
+              '"[{""iso_3166_1"":""""}]"',
+            ].join(',')}`,
+          ),
+        ).toThrow('Invalid movie relations');
+      });
+
+      it('parses optional and numeric movie fields', async () => {
+        const parseMoviesCsv = await loadMoviesParser();
+        const headers =
+          'id,title,original_title,original_language,overview,release_date,popularity,vote_average,vote_count,poster_path,backdrop_path,runtime,budget,revenue,genres,production_countries\n';
+
+        expect(
+          parseMoviesCsv(
+            `${headers}1,Movie,Movie,en,Overview,2020-01-01,10,7,5,/poster,/backdrop,100,200,300,"[18]","[{""iso_3166_1"":""FR""}]"\n` +
+              [
+                '2',
+                'Movie 2',
+                'Movie 2',
+                'en',
+                'Overview',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '[]',
+                '[]',
+              ].join(','),
+          ),
+        ).toHaveLength(2);
+      });
+
+      it('formats non-Error CSV parser failures', async () => {
+        vi.doMock('csv-parse/sync', () => ({
+          parse: () => {
+            throw 'parser failure';
+          },
+        }));
+        vi.resetModules();
+
+        try {
+          const module = await import('./backend-cli.ts');
+          expect(() => module.parseMoviesCsv('invalid')).toThrow(
+            'Invalid movies CSV syntax: parser failure',
+          );
+        } finally {
+          vi.doUnmock('csv-parse/sync');
+        }
+      });
     });
   });
 });
