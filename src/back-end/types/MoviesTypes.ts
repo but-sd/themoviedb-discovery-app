@@ -65,10 +65,6 @@ export type MovieDetails = Omit<
   'adult' | 'video' | 'production_companies'
 >;
 
-export type Country = {
-  code: string
-  name: string
-};
   
 export type Genre = {
   id: number;
