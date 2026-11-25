@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
@@ -128,57 +127,24 @@ describe('backend-cli.ts', () => {
 
   describe('parseCountriesCsv', () => {
     it('parses BOM, CRLF, reordered headers, empty lines, and quoted values', async () => {
-      const directory = mkdtempSync(`${tmpdir()}/countries-cli-`);
-      const csvPath = resolve(directory, 'countries.csv');
-      const databasePath = resolve(directory, 'movies.sqlite');
-      writeFileSync(
-        csvPath,
-        '\ufeff name , code\r\n"Congo, Republic of the", CG\r\n\r\n"United States ""of"" America", US\r\n',
-      );
+      const parseCountriesCsv = await loadCountriesParser();
 
-      try {
-        const output = execFileSync(
-          'npx',
-          [
-            'tsx',
-            'src/back-end/backend-cli.ts',
-            'add-countries',
-            csvPath,
-            '--path',
-            databasePath,
-          ],
-          { encoding: 'utf8' },
-        );
-        expect(output).toContain('2 countries imported/updated');
-      } finally {
-        rmSync(directory, { recursive: true, force: true });
-      }
+      expect(
+        parseCountriesCsv(
+          '\ufeff name , code\r\n"Congo, Republic of the", CG\r\n\r\n"United States ""of"" America", US\r\n',
+        ),
+      ).toEqual([
+        { code: 'CG', name: 'Congo, Republic of the' },
+        { code: 'US', name: 'United States "of" America' },
+      ]);
     });
 
-    it('rejects invalid headers, values, and CSV syntax', async () => {
-      const directory = mkdtempSync(`${tmpdir()}/countries-cli-`);
-      const csvPath = resolve(directory, 'countries.csv');
-      const databasePath = resolve(directory, 'movies.sqlite');
-      writeFileSync(csvPath, 'country,name\nFR,France\n');
+    it('rejects invalid headers', async () => {
+      const parseCountriesCsv = await loadCountriesParser();
 
-      try {
-        expect(() =>
-          execFileSync(
-            'npx',
-            [
-              'tsx',
-              'src/back-end/backend-cli.ts',
-              'add-countries',
-              csvPath,
-              '--path',
-              databasePath,
-            ],
-            { encoding: 'utf8', stdio: 'pipe' },
-          ),
-        ).toThrow('Invalid countries CSV headers');
-      } finally {
-        rmSync(directory, { recursive: true, force: true });
-      }
+      expect(() => parseCountriesCsv('country,name\nFR,France')).toThrow(
+        'Invalid countries CSV headers',
+      );
     });
 
     it('validates all row-level errors', async () => {
