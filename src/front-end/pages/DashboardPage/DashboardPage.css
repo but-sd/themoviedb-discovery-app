@@ -1,0 +1,118 @@
+.dashboard-page {
+  min-height: calc(100vh - 112px);
+  padding-top: 52px;
+}
+
+.dashboard-header {
+  max-width: 760px;
+  padding-bottom: 34px;
+}
+
+.dashboard-eyebrow,
+.dashboard-empty-label {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 3.25rem;
+  line-height: 1.04;
+}
+
+.dashboard-intro {
+  max-width: 620px;
+  margin: 20px 0 0;
+  color: var(--text-secondary);
+  font-size: 1.18rem;
+  line-height: 1.55;
+}
+
+.dashboard-empty {
+  display: flex;
+  min-height: 300px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 38px 28px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-muted);
+  text-align: center;
+}
+
+.dashboard-empty-label {
+  margin-bottom: 12px;
+}
+
+.dashboard-empty h2 {
+  margin: 0;
+  color: var(--ink-strong);
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.dashboard-empty > p:not(.dashboard-empty-label) {
+  max-width: 580px;
+  margin: 14px 0 24px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.dashboard-empty a {
+  display: inline-block;
+  padding: 12px 16px;
+  border: 1px solid #153f5d;
+  border-radius: 6px;
+  background: #153f5d;
+  color: #f7fffc;
+  font-weight: 750;
+  text-decoration: none;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.dashboard-empty a:hover {
+  background: #f7fffc;
+  color: #153f5d;
+}
+
+.dashboard-empty a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+  .dashboard-page {
+    min-height: calc(100vh - 150px);
+    padding-top: 34px;
+  }
+
+  .dashboard-header {
+    padding-bottom: 28px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2.35rem;
+  }
+
+  .dashboard-intro {
+    font-size: 1.05rem;
+  }
+
+  .dashboard-empty {
+    min-height: 260px;
+    padding: 28px 20px;
+  }
+
+  .dashboard-empty h2 {
+    font-size: 1.5rem;
+  }
+}
