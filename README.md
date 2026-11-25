@@ -81,17 +81,32 @@ affichent le nombre de genres importés ou supprimés ainsi que le chemin de la 
 
 ## API locale
 
-| Méthode | Route                 | Description                                                       |
-| ------- | --------------------- | ----------------------------------------------------------------- |
-| `GET`   | `/api/health`         | Vérifie que le serveur répond.                                    |
-| `GET`   | `/api/movies/popular` | Renvoie les films populaires.                                     |
-| `GET`   | `/api/movies/:id`     | Renvoie les détails du film correspondant à son identifiant TMDB. |
+| Méthode | Route                  | Description                                                       |
+| ------- | ---------------------- | ----------------------------------------------------------------- |
+| `GET`   | `/api/health`          | Vérifie que le serveur répond.                                    |
+| `GET`   | `/api/movies/popular`  | Renvoie les films populaires.                                     |
+| `GET`   | `/api/movies/:id`      | Renvoie les détails du film correspondant à son identifiant TMDB. |
+| `GET`   | `/api/discover/movies` | Renvoie une page de films d'une année donnée via TMDB Discover.   |
 
 Les routes des films acceptent les paramètres `language`, `page` et `region`. Exemple :
 
 ```text
 /api/movies/popular?language=fr-FR&page=1&region=FR
 ```
+
+La route Discover requiert `year`, une année sur quatre chiffres entre 1000 et 9999. Elle accepte également `language`, `page` et `region`, qui valent par
+défaut `fr-FR`, `1` et `FR`. Chaque appel récupère uniquement la page demandée,
+sans collecte des pages suivantes, consultation du détail des films ni
+enregistrement en base :
+
+```text
+/api/discover/movies?year=2020
+/api/discover/movies?year=2020&language=en-US&page=2&region=US
+```
+
+La réponse contient les champs de pagination `page`, `results`, `total_pages` et
+`total_results`. Une année absente ou invalide renvoie HTTP 400 ; un échec de
+l'appel TMDB renvoie HTTP 500 avec `Failed to discover movies`.
 
 ## Vérifications
 
