@@ -12,6 +12,7 @@ import {
 } from './database/country-repository.ts';
 import type { Genre } from './database/genre-repository.ts';
 import { deleteUnusedGenres, saveGenres } from './database/genre-repository.ts';
+import { saveMovies, type Movie } from './database/movie-repository.ts';
 
 export function parseCountriesCsv(content: string): Country[] {
   let records: string[][];
@@ -71,6 +72,111 @@ export function parseCountriesCsv(content: string): Country[] {
 
 function readCountriesCsv(path: string): Country[] {
   return parseCountriesCsv(readFileSync(path, 'utf8'));
+}
+
+const MOVIE_HEADERS = [
+  'id',
+  'title',
+  'original_title',
+  'original_language',
+  'overview',
+  'release_date',
+  'popularity',
+  'vote_average',
+  'vote_count',
+  'poster_path',
+  'backdrop_path',
+  'runtime',
+  'budget',
+  'revenue',
+  'genres',
+  'production_countries',
+];
+
+export function parseMoviesCsv(content: string): Movie[] {
+  let records: string[][];
+  try {
+    records = parse(content, {
+      bom: true,
+      columns: false,
+      relax_column_count: true,
+      skip_empty_lines: true,
+      trim: true,
+    }) as string[][];
+  } catch (error) {
+    throw new Error(
+      `Invalid movies CSV syntax: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  const [headers, ...rows] = records;
+  if (
+    !headers ||
+    headers.length !== MOVIE_HEADERS.length ||
+    headers.some((header, index) => header !== MOVIE_HEADERS[index])
+  ) {
+    throw new Error('Invalid movies CSV headers');
+  }
+
+  return rows.map((row, index) => {
+    if (row.length !== MOVIE_HEADERS.length) {
+      throw new Error(`Invalid movie CSV row ${index + 2}`);
+    }
+    const number = (value: string): number | null =>
+      value === '' ? null : Number(value);
+    const json = <T>(value: string): T => {
+      try {
+        return JSON.parse(value) as T;
+      } catch {
+        throw new Error(`Invalid movie JSON on CSV line ${index + 2}`);
+      }
+    };
+    const id = Number(row[0]);
+    if (!Number.isInteger(id) || row[1] === '' || row[3] === '') {
+      throw new Error(`Invalid movie on CSV line ${index + 2}`);
+    }
+    const genres = json<number[]>(row[14]);
+    const countries = json<Array<{ iso_3166_1: string }>>(row[15]);
+    if (
+      !genres.every(Number.isInteger) ||
+      !countries.every((country) => country.iso_3166_1)
+    ) {
+      throw new Error(`Invalid movie relations on CSV line ${index + 2}`);
+    }
+    return {
+      id,
+      title: row[1],
+      original_title: row[2],
+      original_language: row[3],
+      overview: row[4],
+      release_date: row[5] || null,
+      popularity: number(row[6]),
+      vote_average: number(row[7]),
+      vote_count: number(row[8]),
+      poster_path: row[9] || null,
+      backdrop_path: row[10] || null,
+      runtime_minutes: number(row[11]),
+      budget: number(row[12]),
+      revenue: number(row[13]),
+      collected_at: new Date().toISOString(),
+      genre_ids: genres,
+      production_country_codes: countries.map((country) => country.iso_3166_1),
+    };
+  });
+}
+
+export function addMovies(
+  databasePath = DEFAULT_DATABASE_PATH,
+  csvPath = resolve('data/movies.csv'),
+): void {
+  const database = getDatabase(databasePath);
+  try {
+    const movies = parseMoviesCsv(readFileSync(csvPath, 'utf8'));
+    saveMovies(database, movies);
+    console.log(`Imported ${movies.length} movies from ${resolve(csvPath)}`);
+  } finally {
+    database.close();
+  }
 }
 
 const DEFAULT_GENRES_PATH = resolve('data/genres.csv');
@@ -205,6 +311,18 @@ program
   )
   .action(({ path }: { path: string }) => {
     cleanGenres(path);
+  });
+
+program
+  .command('add-movies <csv-file>')
+  .description('Import and update movies from a CSV file')
+  .option(
+    '-p, --path <path>',
+    'path to the SQLite database file',
+    DEFAULT_DATABASE_PATH,
+  )
+  .action((csvFile: string, { path }: { path: string }) => {
+    addMovies(path, csvFile);
   });
 
 if (

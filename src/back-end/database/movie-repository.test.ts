@@ -9,7 +9,7 @@ import {
   type Movie,
 } from './movie-repository';
 
-const movie = (id: number, title: string): Movie => ({
+const movie = (id: number, title = `Movie ${id}`): Movie => ({
   id,
   title,
   original_title: title,
@@ -25,6 +25,12 @@ const movie = (id: number, title: string): Movie => ({
   budget: 1000,
   revenue: 2000,
   collected_at: '2026-01-01T00:00:00.000Z',
+});
+
+const importedMovie = (id: number, title = `Movie ${id}`): Movie => ({
+  ...movie(id, title),
+  genre_ids: [18],
+  production_country_codes: ['FR'],
 });
 
 describe('movie-repository.ts', () => {
@@ -43,12 +49,19 @@ describe('movie-repository.ts', () => {
     }
   });
 
-  it('updates an existing movie and lists movies by id', () => {
+  it('updates movies, preserves omitted relations, and lists movies by id', () => {
     const database = new DatabaseSync(':memory:');
     initializeSchema(database);
+    database
+      .prepare('INSERT INTO genres (id, name) VALUES (?, ?)')
+      .run(18, 'Drama');
+    database
+      .prepare('INSERT INTO countries (code, name) VALUES (?, ?)')
+      .run('FR', 'France');
 
     try {
       saveMovies(database, [movie(20, 'Later'), movie(10, 'Earlier')]);
+      saveMovies(database, [importedMovie(20)]);
       saveMovie(database, {
         ...movie(20, 'Updated'),
         overview: 'Updated overview',
@@ -58,24 +71,55 @@ describe('movie-repository.ts', () => {
         movie(10, 'Earlier'),
         { ...movie(20, 'Updated'), overview: 'Updated overview' },
       ]);
+      expect(
+        database.prepare('SELECT movie_id, genre_id FROM movie_genres').all(),
+      ).toEqual([{ movie_id: 20, genre_id: 18 }]);
+      expect(
+        database
+          .prepare('SELECT movie_id, country_code FROM production_countries')
+          .all(),
+      ).toEqual([{ movie_id: 20, country_code: 'FR' }]);
     } finally {
       database.close();
     }
   });
 
-  it('rolls back all changes when saving movies fails', () => {
+  it('imports movies and rolls back failed imports', () => {
     const database = new DatabaseSync(':memory:');
     initializeSchema(database);
-    const error = new Error('Unable to read movies');
+    database
+      .prepare('INSERT INTO genres (id, name) VALUES (?, ?)')
+      .run(18, 'Drama');
+    database
+      .prepare('INSERT INTO countries (code, name) VALUES (?, ?)')
+      .run('FR', 'France');
 
     function* failingMovies(): Iterable<Movie> {
-      yield movie(1, 'Movie');
-      throw error;
+      yield importedMovie(3);
+      throw new Error('import failed');
     }
 
     try {
-      expect(() => saveMovies(database, failingMovies())).toThrow(error);
-      expect(getMovies(database)).toEqual([]);
+      saveMovies(database, [importedMovie(2), importedMovie(1)]);
+      saveMovies(database, [importedMovie(2, 'Updated')]);
+
+      expect(
+        getMovies(database).map(({ id, title }) => ({ id, title })),
+      ).toEqual([
+        { id: 1, title: 'Movie 1' },
+        { id: 2, title: 'Updated' },
+      ]);
+      expect(
+        database.prepare('SELECT movie_id, genre_id FROM movie_genres').all(),
+      ).toEqual([
+        { movie_id: 1, genre_id: 18 },
+        { movie_id: 2, genre_id: 18 },
+      ]);
+
+      expect(() => saveMovies(database, failingMovies())).toThrow(
+        'import failed',
+      );
+      expect(getMovieById(database, 3)).toBeUndefined();
     } finally {
       database.close();
     }
