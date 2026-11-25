@@ -60,7 +60,9 @@ Le composant [HelloWorld](./src/front-end/components/HelloWorld/HelloWorld.tsx) 
 - Ses [stories](./src/front-end/components/HelloWorld/HelloWorld.stories.tsx) présentent le message par défaut, un message personnalisé et le thème sombre. Le contrôle `message` permet de modifier le texte dans Storybook. L'addon de thèmes applique `data-theme` à un conteneur propre à chaque story, sans modifier la racine du document : les aperçus clairs et sombres peuvent ainsi coexister sur la page Docs. La story `DarkTheme` fixe `globals.theme` à `dark` ; les autres stories utilisent le thème sélectionné dans la barre d'outils (clair par défaut).
 - Ses [tests unitaires](./src/front-end/components/HelloWorld/HelloWorld.test.tsx) vérifient ces deux comportements ainsi que la coexistence des stories claires et sombres avec Vitest et React Testing Library, en suivant le pattern Arrange-Act-Assert et en nettoyant le DOM après chaque test.
 
-Pour ajouter un composant, créez ses fichiers `NomDuComposant.stories.tsx` et `NomDuComposant.test.tsx` à côté de celui-ci dans `src/front-end/`. Utilisez les types `Meta` et `StoryObj` de Storybook pour les stories et vérifiez les sorties visibles avec les requêtes accessibles de React Testing Library.
+Le widget [Films en base](./src/front-end/components/MoviesInDatabaseWidget/MoviesInDatabaseWidget.tsx) est présenté sous `Dashboard/Widgets/FilmsEnBase` avec ses stories `Loading`, `Empty`, `Populated` et `Error`. Chaque story fournit un état indépendant afin de visualiser et valider le rendu du widget sans lancer le serveur backend.
+
+Pour ajouter un widget, créez ses fichiers `NomDuWidget.stories.tsx` et `NomDuWidget.test.tsx` à côté de celui-ci dans `src/front-end/`. Utilisez les types `Meta` et `StoryObj` de Storybook et créez une story pour chaque état pertinent. Vérifiez les sorties visibles avec les requêtes accessibles de React Testing Library.
 
 Pour générer une version statique de Storybook :
 
@@ -102,6 +104,7 @@ Cette commande synchronise la première page des films populaires (20 films par 
 | ------- | --------------------- | ----------------------------------------------------------------- |
 | `GET`   | `/api/health`         | Vérifie que le serveur répond.                                    |
 | `GET`   | `/api/movies/popular` | Renvoie les films populaires.                                     |
+| `GET`   | `/api/movies/count`   | Renvoie le nombre de films enregistrés dans la base SQLite.       |
 | `GET`   | `/api/movies/:id`     | Renvoie les détails du film correspondant à son identifiant TMDB. |
 
 Les routes des films acceptent les paramètres `language`, `page` et `region`. Exemple :

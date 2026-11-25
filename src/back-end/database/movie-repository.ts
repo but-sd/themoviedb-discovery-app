@@ -48,6 +48,16 @@ export function getMovies(database: DatabaseSync): Movie[] {
 }
 
 /**
+ * Returns the number of movies stored in the database.
+ */
+export function getMovieCount(database: DatabaseSync): number {
+  const result = database
+    .prepare('SELECT COUNT(*) AS count FROM movies')
+    .get() as { count: number };
+  return result.count;
+}
+
+/**
  * Inserts or updates all provided movies in one transaction.
  */
 export function saveMovies(

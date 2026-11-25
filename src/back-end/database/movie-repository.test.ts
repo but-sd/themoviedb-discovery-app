@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeSchema } from './schema';
 import {
   getMovieById,
+  getMovieCount,
   getMovies,
   saveMovie,
   saveMovies,
@@ -34,6 +35,22 @@ const importedMovie = (id: number, title = `Movie ${id}`): Movie => ({
 });
 
 describe('movie-repository.ts', () => {
+  it('returns the number of movies in the database', () => {
+    const database = new DatabaseSync(':memory:');
+    initializeSchema(database);
+
+    try {
+      expect(getMovieCount(database)).toBe(0);
+
+      saveMovie(database, movie(1));
+      saveMovie(database, movie(2));
+
+      expect(getMovieCount(database)).toBe(2);
+    } finally {
+      database.close();
+    }
+  });
+
   it('creates a movie, finds it by id, and returns an empty list when no movie exists', () => {
     const database = new DatabaseSync(':memory:');
     initializeSchema(database);

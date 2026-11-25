@@ -1,7 +1,59 @@
-import { Link } from 'react-router';
+import { useEffect, useState } from 'react';
+import MoviesInDatabaseWidget, {
+  type MoviesInDatabaseWidgetState,
+} from '../../components/MoviesInDatabaseWidget/MoviesInDatabaseWidget';
 import './DashboardPage.css';
 
+function isMovieCountResponse(value: unknown): value is { count: number } {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'count' in value &&
+    typeof value.count === 'number' &&
+    Number.isInteger(value.count) &&
+    value.count >= 0
+  );
+}
+
 export default function DashboardPage() {
+  const [widgetState, setWidgetState] = useState<MoviesInDatabaseWidgetState>({
+    status: 'loading',
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadMovieCount() {
+      try {
+        const response = await fetch('/api/movies/count');
+        if (!response.ok) {
+          throw new Error(
+            `Movie count request failed with status ${response.status}`,
+          );
+        }
+
+        const data: unknown = await response.json();
+        if (!isMovieCountResponse(data)) {
+          throw new Error('Invalid movie count response');
+        }
+
+        if (active) {
+          setWidgetState({ status: 'ready', count: data.count });
+        }
+      } catch (error) {
+        if (active) {
+          console.error('Error loading movie count widget:', error);
+          setWidgetState({ status: 'error' });
+        }
+      }
+    }
+
+    void loadMovieCount();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <main className="app-shell dashboard-page">
       <header className="dashboard-header">
@@ -14,16 +66,10 @@ export default function DashboardPage() {
       </header>
 
       <section
-        className="dashboard-empty"
-        aria-labelledby="dashboard-empty-title"
+        className="dashboard-widgets"
+        aria-label="Widgets du tableau de bord"
       >
-        <p className="dashboard-empty-label">Aucun widget configuré</p>
-        <h2 id="dashboard-empty-title">Votre tableau de bord est prêt</h2>
-        <p>
-          Les widgets de visualisation des films, des genres et des pays de
-          production seront disponibles prochainement.
-        </p>
-        <Link to="/movies">Explorer les films populaires</Link>
+        <MoviesInDatabaseWidget state={widgetState} />
       </section>
     </main>
   );

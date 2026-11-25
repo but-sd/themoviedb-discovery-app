@@ -13,12 +13,22 @@ import type {
   TmdbMoviesRawResponse,
 } from '../types/MoviesTypes';
 
-const { toSupportedMovieMock, toSupportedMovieDetailsMock } = vi.hoisted(
-  () => ({
+const {
+  toSupportedMovieMock,
+  toSupportedMovieDetailsMock,
+  databaseMock,
+  getDatabaseMock,
+  getMovieCountMock,
+} = vi.hoisted(() => {
+  const databaseMock = { close: vi.fn() };
+  return {
     toSupportedMovieMock: vi.fn(),
     toSupportedMovieDetailsMock: vi.fn(),
-  }),
-);
+    databaseMock,
+    getDatabaseMock: vi.fn(() => databaseMock),
+    getMovieCountMock: vi.fn(() => 12),
+  };
+});
 
 vi.mock('../utils/converter', () => ({
   toSupportedMovie: toSupportedMovieMock,
@@ -27,6 +37,14 @@ vi.mock('../utils/converter', () => ({
 
 vi.mock('../utils/config', () => ({
   tmdbAccessToken: 'test-access-token',
+}));
+
+vi.mock('../database/schema', () => ({
+  getDatabase: getDatabaseMock,
+}));
+
+vi.mock('../database/movie-repository', () => ({
+  getMovieCount: getMovieCountMock,
 }));
 
 type RouteHandler = (
@@ -69,6 +87,8 @@ describe('movies API', () => {
     registerMoviesApi(app);
     toSupportedMovieMock.mockReset();
     toSupportedMovieDetailsMock.mockReset();
+    getMovieCountMock.mockReset().mockReturnValue(12);
+    databaseMock.close.mockClear();
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -157,6 +177,49 @@ describe('movies API', () => {
           error: 'Failed to fetch popular movies',
         });
       }
+    });
+  });
+
+  describe('GET /api/movies/count', () => {
+    it('returns the number of movies in the database and closes it', async () => {
+      const response = createResponse();
+
+      await getHandler('/api/movies/count')({} as Request, response, vi.fn());
+
+      expect(getDatabaseMock).toHaveBeenCalledOnce();
+      expect(getMovieCountMock).toHaveBeenCalledWith(databaseMock);
+      expect(response.json).toHaveBeenCalledWith({ count: 12 });
+      expect(databaseMock.close).toHaveBeenCalledOnce();
+    });
+
+    it('reports database errors and closes an opened database', async () => {
+      getMovieCountMock.mockImplementationOnce(() => {
+        throw new Error('Database error');
+      });
+      const response = createResponse();
+
+      await getHandler('/api/movies/count')({} as Request, response, vi.fn());
+
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledWith({
+        error: 'Failed to fetch movie count',
+      });
+      expect(databaseMock.close).toHaveBeenCalledOnce();
+    });
+
+    it('reports database connection errors', async () => {
+      getDatabaseMock.mockImplementationOnce(() => {
+        throw new Error('Database unavailable');
+      });
+      const response = createResponse();
+
+      await getHandler('/api/movies/count')({} as Request, response, vi.fn());
+
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledWith({
+        error: 'Failed to fetch movie count',
+      });
+      expect(databaseMock.close).not.toHaveBeenCalled();
     });
   });
 

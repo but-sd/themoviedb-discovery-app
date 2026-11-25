@@ -3,6 +3,8 @@ import express from 'express';
 import { createMovieQueryParams } from '../utils/movie-query-params';
 import { toSupportedMovie, toSupportedMovieDetails } from '../utils/converter';
 import { tmdbAccessToken } from '../utils/config';
+import { getDatabase } from '../database/schema';
+import { getMovieCount } from '../database/movie-repository';
 import type {
   MovieDetails,
   MoviesApiResponse,
@@ -62,6 +64,19 @@ export function registerMoviesApi(app: Express): void {
       }
     },
   );
+
+  app.get('/api/movies/count', (_req, res) => {
+    let database: ReturnType<typeof getDatabase> | undefined;
+    try {
+      database = getDatabase();
+      res.json({ count: getMovieCount(database) });
+    } catch (error) {
+      console.error('Error fetching movie count:', error);
+      res.status(500).json({ error: 'Failed to fetch movie count' });
+    } finally {
+      database?.close();
+    }
+  });
 
   // Define a route handler for fetching movie details by ID from TMDB API
   app.get(
