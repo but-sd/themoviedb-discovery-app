@@ -25,7 +25,7 @@ export default defineConfig({
   test: {
     coverage: {
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['**/*.test.{ts,tsx}', '**/*.css', 'src/stories/**'],
+      exclude: ['**/*.test.{ts,tsx}', '**/*.stories.{ts,tsx}', '**/*.css'],
       thresholds: {
         statements: 100,
         branches: 100,
