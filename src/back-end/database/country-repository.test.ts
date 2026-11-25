@@ -6,7 +6,7 @@ import {
   getCountryByCode,
   upsertCountries,
 } from './country-repository';
-import type { Country } from '../types/MoviesTypes';
+import type { Country } from '../types/Country';
 
 describe('country repository', () => {
   const databases: DatabaseSync[] = [];

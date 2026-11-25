@@ -1,5 +1,5 @@
 import type { DatabaseSync } from 'node:sqlite';
-import type { Country } from '../types/MoviesTypes';
+import type { Country } from '../types/Country';
 
 /**
  * Finds a country by its code.
