@@ -15,6 +15,8 @@ const {
   saveGenresMock,
   deleteUnusedGenresMock,
   saveMoviesMock,
+  syncTmdbCatalogMock,
+  getTmdbAccessTokenMock,
 } = vi.hoisted(() => {
   const closeMock = vi.fn();
   const databaseMock = { close: closeMock };
@@ -28,6 +30,10 @@ const {
     saveGenresMock: vi.fn(),
     deleteUnusedGenresMock: vi.fn(),
     saveMoviesMock: vi.fn(),
+    syncTmdbCatalogMock: vi.fn(),
+    getTmdbAccessTokenMock: vi.fn(
+      (): string | undefined => 'test-access-token',
+    ),
   };
 });
 
@@ -53,6 +59,16 @@ vi.mock('./database/genre-repository.ts', () => ({
 
 vi.mock('./database/movie-repository.ts', () => ({
   saveMovies: saveMoviesMock,
+}));
+
+vi.mock('./services/tmdb-sync-service.ts', () => ({
+  syncTmdbCatalog: syncTmdbCatalogMock,
+}));
+
+vi.mock('./utils/config.ts', () => ({
+  get tmdbAccessToken() {
+    return getTmdbAccessTokenMock();
+  },
 }));
 
 /**
@@ -122,6 +138,53 @@ describe('backend-cli.ts', () => {
       } finally {
         logSpy.mockRestore();
       }
+    });
+  });
+
+  describe('sync-database', () => {
+    it('synchronizes the catalog and closes the database', async () => {
+      const databasePath = './data/custom-movies.sqlite';
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      syncTmdbCatalogMock.mockResolvedValueOnce({
+        movies: 20,
+        genres: 19,
+        countries: 250,
+      });
+
+      try {
+        await runCliWithArgs(['sync-database', '--path', databasePath]);
+
+        expect(getDatabaseMock).toHaveBeenCalledWith(databasePath);
+        expect(syncTmdbCatalogMock).toHaveBeenCalledWith(
+          databaseMock,
+          'test-access-token',
+        );
+        expect(closeMock).toHaveBeenCalledOnce();
+        expect(logSpy).toHaveBeenCalledWith(
+          'Synchronized 20 movies, 19 genres and 250 countries',
+        );
+      } finally {
+        logSpy.mockRestore();
+      }
+    });
+
+    it('closes the database and reports synchronization failures', async () => {
+      syncTmdbCatalogMock.mockRejectedValueOnce(new Error('TMDB unavailable'));
+
+      await expect(runCliWithArgs(['sync-database'])).rejects.toThrow(
+        'TMDB unavailable',
+      );
+      expect(closeMock).toHaveBeenCalledOnce();
+    });
+
+    it('requires a TMDB access token and closes the database', async () => {
+      getTmdbAccessTokenMock.mockReturnValueOnce(undefined);
+
+      await expect(runCliWithArgs(['sync-database'])).rejects.toThrow(
+        'TMDB_ACCESS_TOKEN is not defined in the environment variables.',
+      );
+      expect(syncTmdbCatalogMock).not.toHaveBeenCalled();
+      expect(closeMock).toHaveBeenCalledOnce();
     });
   });
 

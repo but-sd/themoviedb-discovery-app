@@ -13,6 +13,7 @@ import {
 import type { Genre } from './database/genre-repository.ts';
 import { deleteUnusedGenres, saveGenres } from './database/genre-repository.ts';
 import { saveMovies, type Movie } from './database/movie-repository.ts';
+import { syncTmdbCatalog } from './services/tmdb-sync-service.ts';
 
 export function parseCountriesCsv(content: string): Country[] {
   let records: string[][];
@@ -244,6 +245,32 @@ program
   });
 
 program
+  .command('sync-database')
+  .description('Synchronize the popular movies catalog from TMDB')
+  .option(
+    '-p, --path <path>',
+    'path to the SQLite database file',
+    DEFAULT_DATABASE_PATH,
+  )
+  .action(async ({ path }: { path: string }) => {
+    const database = getDatabase(path);
+    try {
+      const { tmdbAccessToken } = await import('./utils/config');
+      if (!tmdbAccessToken) {
+        throw new Error(
+          'TMDB_ACCESS_TOKEN is not defined in the environment variables.',
+        );
+      }
+      const summary = await syncTmdbCatalog(database, tmdbAccessToken);
+      console.log(
+        `Synchronized ${summary.movies} movies, ${summary.genres} genres and ${summary.countries} countries`,
+      );
+    } finally {
+      database.close();
+    }
+  });
+
+program
   .command('add-countries <csv-file>')
   .description('Import countries from a CSV file')
   .option(
@@ -329,5 +356,5 @@ if (
   process.argv[1] &&
   resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
-  program.parse();
+  await program.parseAsync();
 }
