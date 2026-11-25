@@ -86,6 +86,16 @@ npx tsx src/back-end/backend-cli.ts create-database --path ./data/ma-base.sqlite
 
 La commande initialise le schéma sans supprimer les données d'une base existante.
 
+## Synchronisation du catalogue
+
+Pour mettre à jour les genres, les pays et les films populaires avec les données TMDB :
+
+```sh
+npx tsx src/back-end/backend-cli.ts sync-database
+```
+
+Cette commande synchronise la première page des films populaires (20 films par défaut), récupère leurs fiches détaillées et met à jour la base SQLite. Elle utilise `TMDB_ACCESS_TOKEN` depuis `.env` et accepte l'option `--path` pour cibler une autre base.
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |
